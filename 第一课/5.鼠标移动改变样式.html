@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>鼠标移动改变样式</title>
+		<style>
+			body{font: 12px/1.5 tahoma;}
+			#div1 {
+				width: 200px;height: 200px;background: black;color: #FFFFFF;border: black solid 10px;padding:10px;cursor: crosshair;
+			}
+			#div1.hover{color: red;background: #FFFFFF;border:10px solid red;}
+		</style>
+	</head>
+	<body>
+		<div id="div1">鼠标移入改变样式，鼠标移出恢复样式</div>
+		<script type="text/javascript">
+			window.onload = function(){
+				var oDiv = document.getElementById("div1");
+				oDiv.onmouseover = function(){
+					oDiv.className = "hover";
+				}
+				oDiv.onmouseout = function(){
+					oDiv.className = "";
+				}
+			}
+		</script>
+</body>
+</html>

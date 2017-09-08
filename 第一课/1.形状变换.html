@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>控制div属性</title>
+		<style>
+			#outer{width: 500px;margin:0 auto;padding: 0;text-align: center;}
+			#div1{width:100px;height:100px;background: black;margin:10px auto;display:block;}
+		</style>
+	</head>
+	<body>
+	<div id="outer">
+		<button>变宽</button>
+		<button>变高</button>
+		<button>变色</button>
+		<button>隐藏</button>
+		<button>重置</button>
+		<div id="div1"></div>
+	</div>
+		<script>
+			window.onload = function(){
+				var oBut=document.getElementsByTagName("button");
+				var oDiv=document.getElementById("div1");
+				var oVal=["200px","200px","red","none","block"];
+				var oAtt=["width","height","background","display","display"];
+				
+				
+				for(var i=0; i<oBut.length; i++){
+					//用this.index来代替i
+					oBut[i].index = i;
+					oBut[i].onclick = function(){
+						//重置属性
+						if(this.index == oBut.length-1){ oDiv.style.cssText="";}
+						m=oAtt[this.index];
+						//用JS更改属性，style[Att]
+						oDiv.style[m]=oVal[this.index];
+					}
+				}
+			}
+			
+		</script>
+	</body>
+</html>
+
+
