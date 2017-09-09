@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>图片显示</title>
+		<style>
+			body,ul,li{margin: 0;padding: 0;}
+			body{background:#000}
+			
+			#box{width: 212px; margin: 10px auto;border: 5px solid #fff;border-radius: 5px;padding:0 0 3px 3px ;background: #fff;overflow: hidden;zoom: 1;}
+			#box li,img{width: 50px;height: 50px;}
+			#box li.first{position:relative;}
+			#box .first,.first img{width: 156px;height: 156px;}
+			#box li img{border:0;border-radius: 3px;}
+			#box li{margin: 3px 3px 0 0 ;float:left;overflow: hidden;zoom: 1;}
+			#box li.first div{position:absolute;top:0;left:0;width:156px;height:156px;display:none;opacity:0.5;filter:alpha(opacity=50);background:#fff url(img/loading.gif) 50% 50% no-repeat;}
+			
+			
+		</style>
+	</head>
+	<body>
+		<ul id="box">
+		    <li class="first"><img src="img/big_1.jpg"><div></div></li>
+		    <li><a href="javascript:;"><img src="img/small_1.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_2.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_3.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_4.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_5.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_6.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_7.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_8.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_9.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_10.jpg"></a></li>
+		    <li><a href="javascript:;"><img src="img/small_11.jpg"></a></li>
+		</ul>
+		<script>
+			window.onload = function(){
+				var oDiv = document.getElementsByTagName("div")[0];
+				var oImg = document.getElementsByTagName("img");
+				
+				for(var i=0; i<oImg.length; i++){
+					oImg[i].index = i;
+					oImg[i].onmouseover = function(){
+						var img = new Image();
+						oDiv.style.display = "block";
+						img.src = oImg[0].src = this.src.replace(/small/,"big");
+						img.complete?oDiv.style.display = "none":(oImg[0].onload=function(){oDiv.style.display = "none"});
+					}
+				}
+				
+				
+			}
+		</script>
+	</body>
+</html>
