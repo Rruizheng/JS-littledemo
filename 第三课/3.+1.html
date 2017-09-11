@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>+1</title>
+		<style>
+			body,input{margin: 0;padding: 0;}
+			body{text-align: center;}
+			input{margin: 10px auto;padding: 0 10px;font: 12px arial;cursor: pointer;}
+		</style>
+	</head>
+	<body>
+		<input type="button" value="0" />
+		<script>
+			window.onload = function(){
+				var oBtn = document.getElementsByTagName("input")[0];
+				var i = 0;
+				
+				oBtn.onclick = function(){
+					oBtn.value = ++i;  //先赋值再加。
+					alert(i);
+				}
+			}
+		</script>
+	</body>
+</html>
