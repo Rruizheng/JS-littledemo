@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>简易时钟</title>
+		<style>
+			body,div,span{margin: 0;padding: 0;}
+			body{font: 16px/1.5 "microsoft yahei";color: #fff;}
+			#outer {width: 300px;background: black;padding:20px 0;margin: 10px auto;text-align: center;}
+			span {color: #000; background: #fbfbfb;width: 80px;border: 2px solid #b4b4b4;padding: 0 10px;margin: 0 10px;line-height: 2;}
+		</style>
+	</head>
+	<body>
+		<div id="outer">
+			<span></span>点<span></span>分<span></span>秒
+		</div>
+		
+		<script>
+			window.onload = function(){
+				var oSpan = document.getElementsByTagName("span");
+				var myDate = new Date();
+				
+				
+				function  timeNow(){
+					var myDate = new Date();
+					/**oSpan[0].innerHTML = myDate.getHours();
+					oSpan[1].innerHTML = myDate.getMinutes();
+					oSpan[2].innerHTML = myDate.getSeconds();
+					**/
+					//方法二
+					var aSpan = [myDate.getHours(),myDate.getMinutes(),myDate.getSeconds()];
+					for(var i in aSpan){ oSpan[i].innerHTML = format(aSpan[i])}
+				}
+				
+				setInterval(timeNow,1000);
+				
+				
+				function format(a){
+					return a.toString().replace(/^(\d)$/, "0$1")	
+				}
+			}
+		</script>
+	</body>
+</html>

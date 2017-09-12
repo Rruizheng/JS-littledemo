@@ -12,9 +12,19 @@
 			#calc p{color: #fff;text-align: right;padding:0 5px;font: 12px/20px arial;}
 			.f-text {width: 290px;height:84px;font:700 50px/84px arial;text-align: right;background: url(img/inputBg.jpg) repeat-x;padding: 0 5px;border: 0;}
 			
-
-
-			
+			#calc ul{position:relative;overflow:hidden;zoom:1;background:url(img/bg.jpg);padding:0 0 17px 8px;}
+			#calc ul li{float:left;width:63px;height:41px;margin:17px 10px 0 0;}
+			#calc ul li a{width:63px;height:41px;line-height:41px;text-align:center;display:block;background:url(img/btn.png) no-repeat;}
+			#calc ul li a:hover{background-position:-63px 0;}
+			#calc ul li.btn-1 a{background-position:0 -41px;}
+			#calc ul li.btn-1 a:hover{background-position:-63px -41px;}
+			#calc ul li.btn-2{position:absolute;top:174px;right:0;height:99px;}
+			#calc ul li.btn-2 a{height:99px;line-height:99px;background-position:0 -164px;}
+			#calc ul li.btn-2 a:hover{background-position:-63px -164px;}
+			#calc ul li.btn-3{width:136px;}
+			#calc ul li.btn-3 a{width:136px;background-position:0 -82px;}
+			#calc ul li.btn-3 a:hover{background-position:0 -123px;}
+			#formula{position:absolute;top:20px;background:none;border:0;font:700 12px/1.5 Arial;width:280px;padding:3px 15px 0 5px;text-align:right;}		
 		</style>
 	</head>
 	<body>
@@ -43,5 +53,100 @@
     </ul>
     <input id="formula" type="text" readonly="readonly" value="" />
 </div>
+
+<script>
+/**window.onload = function ()
+	{
+	var oCalc = document.getElementById("calc");
+	var aA = oCalc.getElementsByTagName("a");
+	var aInput = oCalc.getElementsByTagName("input")[0];
+	var oFormula = document.getElementById("formula");	
+	var s = false; //是否按下了“=”,按下了则变成“true”,结束运算。
+	var i = 0;
+	
+	for (i = 0; i < aA.length; i++){ //对每个键按下后进行处理
+		aA[i].onfocus = function ()
+			{
+			this.blur();
+		};
+		
+		aA[i].onclick = function ()
+			{
+			switch(this.innerHTML)
+				{
+				case "c":
+					aInput.value =  0;
+					oFormula.value = "";
+					break;
+				case "%":
+					count("%")
+					break;
+				case "÷":
+					count("/")
+					break;
+				case "×":
+					count("*")
+					break;
+				case "-":
+					count("-")
+					break;
+				case "+":
+					count("+")
+					break;
+				case "=":    
+					s || (oFormula.value += aInput.value);
+					//相当于if(s== false){oFormula.value += aInput.value}
+					aInput.value = eval(oFormula.value.replace(/\%\/\*\-\+/,''));
+					aInput.value = aInput.value.substr(0,10).replace("NaN",0);//前10位的数字，有非数字的话，用0替代
+					s = true;
+					break;
+				case ".":
+					if(aInput.value.search(/[\.\%\/\*\-\+]/) != -1)
+					break;
+				default:  //数字
+					s && (aInput.value = 0, oFormula.value = "", s = false);
+					//相当于if(s==true){aInput.value = 0, oFormula.value = "", s = false}
+					aInput.value.length < 10 && (aInput.value = (aInput.value + this.innerHTML).replace(/^[0\%\/\*\-\+](\d)/,"$1"));
+			}
+		}	
+	}
+	
+	function count(a) //
+		{
+
+		if(s)  //如果是true，说明刚刚按下过“=”号。
+		{
+			oFormula.value = aInput.value + a;  // 计算框为原来的结果直接加新输入的运算符。
+			aInput.value = a;	//输入框为运算符[/\%\/\*\-\+/]
+			s = false;
+		}
+		else   //没有按下过“=”，计算狂为原结果加上新的运算符。输入框为运算符。
+		{
+			/[\%\/\*\-\+]$/.test(aInput.value) || (oFormula.value += aInput.value);
+			//如果输入的结尾不是运算符，那么直接加到运算框里面，aInput要等于a，
+			aInput.value = a;
+			/[\%\/\*\-\+]$/.test(oFormula.value) || (oFormula.value += aInput.value);
+			//如果运算框的结尾不是运算符，则直接把运算符加到运算框里面。
+			
+			//输入框的最后一个元素是不是运算符a，如果不是，. 除了换行符之外的任意字符,就替代成运算符a。如果是，那么就还是等于原来的值。
+			oFormula.value = oFormula.value.slice(-1) != a ?   oFormula.value.replace(/.$/,a) : oFormula.value
+		}
+	}
+}
+**/
+
+window.onload = function(){
+	var oCalc = document.getElementById("calc");
+	var aA = oCalc.getElementsByTagName("a");
+	var aInput = oCalc.getElementsByTagName("input")[0];
+	var oFormula = document.getElementById("formula");	
+	
+	for(var i = 0; i<aA[i].length ;i++){
+		
+	}
+	
+}
+
+</script>
 	</body>
 </html>
