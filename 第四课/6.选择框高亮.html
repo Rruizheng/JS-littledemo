@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>选择框高亮</title>
+		<style>
+			body,div,span,input,p{padding: 0;margin: 0;}
+			body{font: 14px/1.5 "microsoft yahei";color: #4f4f4f;}
+			#box{width: 400px;margin: 10px auto;padding-bottom:10px;background: #fef4eb;border: 2px solid #FF6600;overflow: hidden;zoom: 1;}
+			#box div{padding:5px 10px;border-bottom: 2px solid #ff6600;background:#ffebd7;color: #fe791e;font-size: 16px;font-weight: 700;}
+			#box p{clear:both;margin-top:10px;width: 100%;height: 31px;line-height: 31px;float: left;}
+			#box p span,input,button{float: left;}
+			span{width: 100px;height: 31px;text-align: right;}
+			input{background: url(img/input.png) no-repeat;height: 31px;border: 0;width: 203px;padding-left: 5px;}
+			.f-text-high{background-position:0 -31px;}
+			button{width: 104px;height: 31px;cursor: pointer;font-size: 16px;color: #fff;background: #f60;border: 0;border-radius: 5px;}
+			
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div>用户登录</div>
+			<p>
+				<span>用户名：</span>
+				<input class="f-text"  type="text" />
+			</p>
+			<p>
+				<span>密码：</span>
+				<input class="f-text" type="password" maxlength="8"/>
+			</p>
+			<p>
+				<span></span>
+				<button>登录</button>
+			</p>
+		</div>
+		<script type="text/javascript">
+			window.onload = function(){
+				var aInput = document.getElementsByTagName("input");
+				var aBtn = document.getElementsByTagName("button")[0];
+				
+				for(var i=0;i<aInput.length;i++){
+					aInput[i].onfocus = function(){
+						this.className = "f-text-high";
+					}
+					aInput[i].onblur = function(){
+						this.className = "";
+					}
+				}
+				
+				aBtn.onclick = function(){
+					//alert(aInput[0].value);
+					var n=0;
+					for(var i=0;i<aInput.length;i++){ 
+						
+						aInput[i].value != "" && n++;
+					};
+					n == aInput.length ? alert("提交成功！"):alert("请输入用户名或密码");
+				}
+			}
+
+		</script>
+	</body>
+</html>
