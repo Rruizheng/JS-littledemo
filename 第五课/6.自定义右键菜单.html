@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body,ul,li{margin:0;padding:0;}
+			body{font: 12px/24px arial;}
+			#menu{position:absolute;width: 100px;border: 1px solid #8f8f8f;list-style-type: none;border-radius: 3px;padding: 2px;background: #fff;top: -999999px;left: -999999px;}
+			#menu li{position:relative;height: 24px;padding-left: 24px;background: #eaead7;vertical-align: top;}
+			#menu li a{display:block;color:#333;background:#fff;padding-left:5px;text-decoration:none;}	
+			#menu li.active{background: #999;}
+			#menu li.active a{color:#fff;background:#8f8f8f;}
+			#menu li em {background: url(img/ico.png) no-repeat;position: absolute;top: 0;left: 0;width: 24px;height: 24px;}
+			#menu li em.cur{background-position:0 0;}
+			#menu li em.copy{background-position:0 -24px;}
+			#menu li em.paste{background-position:0 -48px;}
+		</style>
+	</head>
+	<body>
+		<center>自定义右键菜单，请在页面点击右键查看效果。</center>
+		<ul id="menu">
+		    <li><em class="cut"></em><a href="javascript:;">剪切</a></li>
+		    <li><em class="copy"></em><a href="javascript:;">复制</a></li>
+		    <li><em class="paste"></em><a href="javascript:;">粘贴</a></li>
+		</ul>
+		<script>
+			window.onload = function(){
+				var oMenu = document.getElementById("menu");
+				var aLi = document.getElementsByTagName("li");
+				for(var i = 0;i<aLi.length;i++){
+					aLi[i].onmouseover = function(){
+						this.className = "active";
+					}
+					aLi[i].onmouseout = function(){
+						this.className = "";
+					}
+				}
+				
+				document.oncontextmenu = function(event){
+					var event = event || window.event;
+					var style = oMenu.style;
+					style.display = "block";
+					style.top = event.clientY + "px";
+					style.left = event.clientX + "px";
+					return false;//阻止默认行为
+				}
+				
+				document.onclick = function ()
+				{
+					oMenu.style.display = "none";	
+				}
+			}
+		</script>
+	</body>
+</html>
