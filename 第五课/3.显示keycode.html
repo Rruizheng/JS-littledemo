@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>显示keycode</title>
+	</head>
+	<body>
+		<p>这里将显示您按下键的 keyCode</p>
+	</body>
+	<script>
+		window.onload = function() {
+			var oP = document.getElementsByTagName("p")[0];
+			document.onkeydown = function(event){
+				var event = event || window.event;
+				oP.innerHTML = event.keyCode;
+				return false;
+			}
+		}
+	</script>
+</html>

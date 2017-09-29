@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>select模拟</title>
+		<style>
+			body,div,ul,li,form{margin: 0;padding: 0;}
+			ul{list-style-type: none;}
+			body{font: 12px/1.5 arial;background: #23384e;color: #fff;}
+			#search,#search form,#search .box,#search .select,#search a{background:url(img/search.jpg) no-repeat;}
+			#search,#search form,#search .box,#search .select,#search a{height: 34px;}
+			#search{position:relative;width: 350px;margin: 10px auto;}
+			.box{background-position: right 0;}
+			
+			form{background-position: 0 -34px;background-repeat:repeat-x;margin: 0 20px 0 40px;display: block;}
+			form span{width:200px;height:23px;line-height:23px;display:inline-block;background: url(img/search.jpg);background-position: 0 -68px;padding-top: 5px;}
+		</style>
+	</head>
+	<body>
+		<div id="search">
+			<div class="box">
+				<form>
+					<span class="select">
+						请选择游戏名称
+					</span>
+					<a href="javascript:;">搜索</a>
+				</form>
+			</div>
+			<ul class="sub">
+				<li>地下城与勇士</li>
+		        <li>魔兽世界（国服）</li>
+		        <li>魔兽世界（台服）</li>
+		        <li>热血江湖</li>
+		        <li>神鬼传奇</li>
+		        <li>大话西游II</li>
+		        <li>QQ幻想世界</li>
+			</ul>
+		</div>
+	</body>
+</html>

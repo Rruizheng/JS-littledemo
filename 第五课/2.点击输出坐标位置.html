@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>点击输出坐标</title>
+	</head>
+	<body>
+	</body>
+	<script>
+		document.onclick = function(){
+			var event = event || window.event;
+			alert("坐标: [" + event.clientX + "," + event.clientY +"]");
+		}
+	</script>
+</html>
