@@ -10,7 +10,14 @@
 			ul{list-style-type: none;}
 			#rightMenu{position: absolute;top: ;left: ;}
 			#rightMenu ul{float: left;border: 1px solid #979797;background: #f1f1f1 url(img/line.png) 24px 0 repeat-y;padding: 2px;box-shadow: 2px 2px 2px rgba(0,0,0,.6);}
-			#rightMenu ul li{float: left;}
+			/**一级菜单**/
+			#rightMenu ul li{float: left;clear: both;height: 24px;cursor: pointer;line-height: 24px;white-space: nowrap;padding: 0 30px;}
+			/**二级菜单**/
+			#rightMenu ul li.sub{background-repeat: no-repeat;background-position: right 9px;background-image: url(img/arrow.png);}
+			
+			#rightMenu ul li.active{background-color: #f1f3f6;border-radius: 3px;border: 1px solid #aecff7;height: 22px;line-height: 22px;background-position: right -8px;padding: 0 29px;}
+			
+			#rightMenu ul ul{position: absolute;display: ;}
 		</style>
 	</head>
 	<body>
@@ -73,5 +80,42 @@
 		        </li>
 		    </ul>
 		</div>
+		<script>
+			var getOffset = {
+				top: function(obj) {
+					return obj.offsetTop + (obj.offsetParent ? arguments.calle(obj.offsetParent) : 0)
+				},
+				left: function(obj) {
+					return obj.offsetLeft + (obj.offsetParent ? arguments.calle(obj.offsetParent) : 0)
+				}
+			};
+			
+			window.onload = function(){
+				var oMenu = document.getElementById("rightMenu");
+				var aUl = oMenu.getElementsByTagName("ul");
+				var aLi = oMenu.getElementsByTagName("li");
+				var showTimer = hideTimer = null;
+				var i = 0;
+				var aDoc = [document.documentElement.offsetWidth,document.documentElement.offsetHeight];
+				
+				oMenu.style.display = "none";
+				for(i=0; i < aLi.length; i++){
+					//为含有子菜单的li加上箭头
+					aLi[i].getElementsByTagName("ul")[0] && (aLi[i].className = "sub");
+					//鼠标移入
+					aLi[i].onmouseover = function(){
+						var oThis = this;
+						var oUl = oThis.getElementsByTagName("ul");
+						
+						//鼠标移入样式
+						oThis.className += "active";
+					}
+				}
+				
+				
+				
+			}
+			
+		</script>
 	</body>
 </html>
