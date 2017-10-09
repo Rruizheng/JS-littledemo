@@ -2,8 +2,106 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>模仿微博</title>
+		<style>
+			body,form,div,input,ul,li,p{margin: 0;padding: 0;}
+			a{text-decoration: none;}
+			a:hover{text-decoration: underline;}
+			ul{list-style-type: none;}
+			body{font: 12px/1.5 \5b8b\4f53;color: #333;background: #3c3a3b;}
+			
+			#msgBox{background: #fff;width: 500px;margin: 10px auto;padding-top:10px;border-radius: 5px;}
+			
+			form{padding: 0 20px 15px;background: url(img/boxBG.jpg) repeat-x;background-position:0 bottom;}
+			form h2{font-weight:400;font:400 18px/1.5 \5fae\8f6f\96c5\9ed1;}
+			#userName,#conBox{color: #777;border: 1px solid #d0d0d0;border-radius: 5px;background: #fff url(img/inputBG.png) repeat-x 0 top;padding: 3px 5px;font: 14px/1.5 arial;}
+			#userName.active,#conBox.active{border:1px solid #7abb2c;}
+			#userName{height: 20px;}
+			#conBox{width: 448px;height: 65px;resize: none;overflow: auto;}
+			form div{position: relative;color: #999;margin-top: 10px;}
+			#msgBox img{border-radius: 3px;}
+			#face{position: absolute;top: 0;left: 172px;}
+			#face img{width: 30px;height: 30px;cursor: pointer;opacity: 0.5;filter: alpha(opacity=50);}
+			#face img.current,#face img:hover{width: 28px;height: 28px;border: 1px #f60 solid;opacity: 1;filter: alpha(opacity=100);}
+			
+			.tr strong.maxNum{font:26px/30px Georgia, Tahoma, Arial;padding:0 5px;}
+			#sendBtn{background: url(img/btn.png) no-repeat;width: 112px;height: 30px;border: 0;margin-left: 10px;cursor: pointer;}
+			#sendBtn:hover{background-position: 0 -30px;}
+			
+			
+		</style>
 	</head>
 	<body>
+		<div id="msgBox">
+			<form>
+				<h2>来，说说你在做什么，想什么</h2>
+				<div>
+					<input id="userName" type="f-text" value=""/>
+					<p id="face">
+						<img src="img/face1.gif" class="current" />
+						<img src="img/face2.gif" alt="" />
+						<img src="img/face3.gif" alt="" />
+						<img src="img/face4.gif" alt="" />
+						<img src="img/face5.gif" alt="" />
+						<img src="img/face6.gif" alt="" />
+						<img src="img/face7.gif" alt="" />
+						<img src="img/face8.gif" alt="" />			
+					</p>
+				</div>
+				<div>
+					<textarea id="conBox" class="f-text"></textarea>
+				</div>
+				<div class="tr">
+					<p><span>还能输入</span><strong class="maxNum">140</strong><span>个字</span>
+					<input type="button" id="sendBtn" value="" title="快捷键Ctrl+Enter" /></p>
+				</div>
+			</form>
+			
+			<div class="list">
+				<h3><span>大家在说</span></h3>
+				<ul>
+					<li>
+						<div class="userPic"><img src="img/face.gif"/></div>
+						<div class="content">
+							<div class="userName"><a href="javascript:;">十九</a>：</div>
+							<div class="msgInfo">新增Ctrl+Enter快捷键发送广播。</div>
+							<div class="times"><span>10月1日 12:00</span>	<a class="del" href="javascript:;">删除</a></div>
+						</div>
+					</li>
+					<li>
+						<div class="userPic"><img src="img/face.gif"/></div>
+						<div class="content">
+							<div class="userName"><a href="javascript:;">十九</a>：</div>
+							<div class="msgInfo">新增选择头像功能。</div>
+							<div class="times"><span>10月1日 12:00</span>	<a class="del" href="javascript:;">删除</a></div>
+						</div>
+					</li>
+					<li>
+						<div class="userPic"><img src="img/face.gif"/></div>
+						<div class="content">
+							<div class="userName"><a href="javascript:;">十九</a>：</div>
+							<div class="msgInfo">增加了记录广播时间的功能。</div>
+							<div class="times"><span>10月1日 12:00</span>	<a class="del" href="javascript:;">删除</a></div>
+						</div>
+					</li>
+					<li>
+						<div class="userPic"><img src="img/face.gif"/></div>
+						<div class="content">
+							<div class="userName"><a href="javascript:;">十九</a>：</div>
+							<div class="msgInfo">增加了输入字符检测功能，英文/半角为半个字符，汉字/全角为一个字符。</div>
+							<div class="times"><span>10月1日 12:00</span>	<a class="del" href="javascript:;">删除</a></div>
+						</div>
+					</li>
+					<li>
+						<div class="userPic"><img src="img/face.gif"/></div>
+						<div class="content">
+							<div class="userName"><a href="javascript:;">十九</a>：</div>
+							<div class="msgInfo">仿腾讯微博效果，欢迎大家测试！</div>
+							<div class="times"><span>10月1日 12:00</span>	<a class="del" href="javascript:;">删除</a></div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</body>
 </html>
