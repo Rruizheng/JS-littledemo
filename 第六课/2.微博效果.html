@@ -180,12 +180,52 @@
 			};
 				
 				
-				//输入内容的时候的字符统计
-				//提交时检查用户名和内容
+			EventUtil.addLoadHandler(function(){
+				var oMsgBox = get.byId("msgBox"),
+					oUserName = get.byId("userName"),
+					oConBox = get.byId("conBox"),
+					oSendBtn = get.byId("sendBtn");
+				var	oMaxNum = get.byClass("maxNum")[0],
+					oCountTxt = get.byClass("countTxt")[0],
+					oList = get.byClass("list")[0],
+					oUl = get.byTagName("ul",oList)[0],
+					oLi = get.byTagName("li",oList);
+				var aFtxt = get.byClass("f-text",oMsgBox);
+				var aImg = get.byTagName("img",get.byId("face"));
+				var bSend = false;
+				var timer = null;
+				var oTmp = "";
+				var i = 0;
+				var maxNum = 140;
+				
+				//禁止表单提交
+				EventUtil.addHandler(get.byTagName("form",oMsgBox)[0],"submit",function(){return false;});
+				
+				//为广播按钮绑定发送事件
+				EventUtil.addHandler(oSendBtn,"click",fnSend);
+				
 				//Crtl+Enter发送广播
+				EventUtil.addHandler(document,"keyup",function(event){
+					var event = event || window.event;
+					event.ctrlKey && event.keyCode == 13 && fnSend();
+				});
+				
+				
+				
+				//输入内容的时候的字符统计
+				
+				
+				//提交时检查用户名和内容
+				
 				//添加消息到list
 				//字符检测功能
 				//删除功能
+					
+					
+				
+				
+			});
+				
 				
 			
 		</script>
