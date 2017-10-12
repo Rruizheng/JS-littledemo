@@ -24,10 +24,26 @@
 			#face img{width: 30px;height: 30px;cursor: pointer;opacity: 0.5;filter: alpha(opacity=50);}
 			#face img.current,#face img:hover{width: 28px;height: 28px;border: 1px #f60 solid;opacity: 1;filter: alpha(opacity=100);}
 			
+			.tr{overflow: hidden;zoom: 1;}
+			.tr p{float: right;display: block;}
 			.tr strong.maxNum{font:26px/30px Georgia, Tahoma, Arial;padding:0 5px;}
 			#sendBtn{background: url(img/btn.png) no-repeat;width: 112px;height: 30px;border: 0;margin-left: 10px;cursor: pointer;}
 			#sendBtn:hover{background-position: 0 -30px;}
 			
+			.list{padding: 10px;}
+			.list h3{position: relative;height: 33px;font-size: 14px;font-weight: 400;background: #e3eaec;border: 1px solid #dee4e7;}
+			.list h3 span{position: absolute;left: 6px;top: 6px;background: #fff;line-height: 28px;display: inline-block;padding: 0 15px;}
+			.list ul{overflow: hidden;zoom: 1;}
+			.list ul li{float: left;clear: both;width: 100%;border-bottom: 1px dashed #d8d8d8;padding: 10px 0;background: #fff;overflow: hidden;}
+			.list ul li:hover{background: #f5f5f5;}
+			.list ul li .userPic{float: left;width: 50px;height: 50px;display: inline;margin-left: 10px;border: 1px solid #ccc;border-radius: 3px;}
+			.list ul li .content{margin-left: 10px;width: 400px;float: left;font-size: 14px;font-family: arial;word-wrap: break-word;}
+			.list ul li .userName{float: left;display: inline;padding-right: 5px;}
+			.list ul li .userName a{color: #2b4a78;}
+			.list ul li .msgInfo{display: inline;word-wrap: break-word;}
+			.list ul li .times{color: #889db6;font: 12px/18px arial;margin-top: 5px;overflow: hidden;zoom: 1;}
+			.list ul li .times span{float: left;}
+			.list ul li .del{float: right;color: #889db6;display: none;}
 			
 		</style>
 	</head>
@@ -103,5 +119,75 @@
 				</ul>
 			</div>
 		</div>
+		
+		<script type="text/javascript">
+			var EventUtil = {
+				addHandler: function(oElement,sEvent,fnHandler){
+					oElement.addEventListener ? oElement.addEventListener(sEvent,fnHandler,false) : (oElement["_"+sEvent+fnHandler]=fnHandler,//把fnHandler存到一个oElement[]里面
+					oElement[sEvent + fnHandler] = function(){oElement["_"+sEvent+fnHandler]()},//调用function(){fnHandler}?为什么要这么写呢？？？
+					oElement.attachEvent("on"+sEvent,oElement[sEvent+fnHandler]))
+				},
+				removeHandler: function(oElement,sEvent,fnHandler){
+					oElement.removeEventListener ? oElement.removeEventListener(sEvent,fnHandler,false) : 
+					oElement.detachEvent("on"+sEvent,oElement[sEvent+fnHandler])
+				},
+				
+				addLoadHandler: function(fnHandler){
+					this.addHandler(window,"load",fnHandler);
+				}
+			}
+			
+			var get = {
+				byId: function(id){
+					//如果id不是字符串，返回id，是字符串，返回取得的id元素
+					return typeof id === "string" ? document.getElementById(id) : id;
+				},
+				byTagName: function(elem,obj){
+					return (obj || document).getElementsByTagName(elem);
+				},
+				byClass: function(sClass,oParent){
+					var aClass = [];
+					var reClass = new RegExp("(^| )" + sClass + "( |$)");
+					var aElem = this.byTagName("*",oParent);
+					//oParent下的所有元素放在aELem里面
+					for(var i=0; i<aElem.length;i++){
+						//逐一检验oParent的子元素，如果有className是reClass就放在aClass里面。
+						reClass.test(aElem[i].className)&&aClass.push(aElem[i]);	
+					}
+					return aClass;
+				}
+			}
+			
+			//设置css格式
+			function css(obj,attr,value){
+				//检验给函数的参数个数
+				switch(arguments.length){
+					case 2:
+					//例如css(oLi, {"opacity" : "0", "height" : "0"});设置了对象obj,第二个对象类型是object,批量设置属性。style[i]=attr[i]。attr[opacity] = 0。
+						if(typeof argument[1] == "object"){
+							for(var i in attr) i == "opacity" ?(obj.style["filter"] = "alpha(opacity=" + attr[i] + ")") : obj.style[i] = attr[i];
+					//例如css(oLi, "height");第二个对象类型是string,读取属性
+						}else{
+							//IE用currentStyle方法，没有的话，用getComputedStyle方法
+							return obj.currentStyle ? obj.currentStyle[attr] : getComputedStyle(obj,null)[attr]
+						}
+						break;
+					//有三个参数，单一设置属性。
+					case 3:
+						attr == "opacity" ? (obj.style["filter"] = "alpha(opacity=" + value + ")",obj.style[attr] = value/100) : obj.style[attr] = value;
+						break;
+				}
+			};
+				
+				
+				//输入内容的时候的字符统计
+				//提交时检查用户名和内容
+				//Crtl+Enter发送广播
+				//添加消息到list
+				//字符检测功能
+				//删除功能
+				
+			
+		</script>
 	</body>
 </html>
