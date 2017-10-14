@@ -233,17 +233,36 @@
 						var oLi = document.createElement("li");
 						var oDate = new Date();
 						
-						oLi.innerHTML = "<li>
-						<div class="userPic"><img src="img/face.gif"/></div>
-						<div class="content">
-							<div class="userName"><a href="javascript:;">十九</a>：</div>
-							<div class="msgInfo">增加了输入字符检测功能，英文/半角为半个字符，汉字/全角为一个字符。</div>
-							<div class="times"><span>10月1日 12:00</span>	<a class="del" href="javascript:;">删除</a></div>
-						</div>
-					</li>";
+						oLi.innerHTML = "<div class=\"userPic\"><img src=\"" + get.byClass("current",get.byId("face"))[0].src + "\"></div>\
+						<div class=\"content\">\
+							<div class=\"userName\"><a href=\"javascript:;\">" + oUserName.value + "</a>:</div>\
+							<div class=\"msgInfo\">" + oConBox.value.replace(/<[^>]*>|&nbsp;/ig,"") + "</div>\
+							<div class=\"times\"><span>" + format(oDate.getMonth()+1) + "\u6708"+format(oDate.getDate()) + "\u65e5" + format(oDate.getHours()) + ":" + format(oDate.getMinutes()) + "</span><a class=\"del\" href=\"javascript:;\">\u5220\u9664</a></div>\
+						</div>";
 						
+						//插入元素
+						aLi.length ? oUl.insertBefore(oLi,aLi[0]) : oUl.appendChild(oLi);
+						
+						//重置表单
+						get.byTagName("form",oMsgBox)[0].reset();
+						for(i=0;i<aImg.length;i++){
+							aimg[i].className = "";
+							aImg[0].className = "current";
+						}
+						
+						//将元素的高度保存
+						var iHeight = oLi.clientHeight - parseFloat(css(oLi,"paddingTop")) - parseFloat(css(oLi,"paddingBottom"));
+						var alpha = count = 0;
+						timer = setInterval(function(){
+							if(oLi,{"display": "block","opacity":"0","height":(count += 8)+"px"});
+							if(count > iHeight){
+								clearInterval(timer);
+								css(oLi,"height",iHeight+"px");
+								alpha > 100 && (clearInterval(timer),css(oLi,"opacity",100)),
+							},30
+						})
 					}
-				}
+				};
 				
 				//输入内容的时候的字符统计
 				
