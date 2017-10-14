@@ -253,14 +253,20 @@
 						//将元素的高度保存
 						var iHeight = oLi.clientHeight - parseFloat(css(oLi,"paddingTop")) - parseFloat(css(oLi,"paddingBottom"));
 						var alpha = count = 0;
+						css(oLi,{"opacity":"0","height":"0"});
 						timer = setInterval(function(){
-							if(oLi,{"display": "block","opacity":"0","height":(count += 8)+"px"});
+							css(oLi,{"display": "block","opacity":"0","height":(count += 8)+"px"});
 							if(count > iHeight){
 								clearInterval(timer);
 								css(oLi,"height",iHeight+"px");
-								alpha > 100 && (clearInterval(timer),css(oLi,"opacity",100)),
-							},30
-						})
+								timer = setInterval(function(){
+									css(oLi,"opacity",(alpha += 10));
+									alpha > 100 && (clearInterval(timer),css(oLi,"opacity",100))
+								},30)
+							}
+							},30);
+							liHover();
+							delLi();
 					}
 				};
 				
