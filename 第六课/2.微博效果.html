@@ -52,7 +52,7 @@
 			<form>
 				<h2>来，说说你在做什么，想什么</h2>
 				<div>
-					<input id="userName" type="f-text" value=""/>
+					<input id="userName" class="f-text" value=""/>
 					<p id="face">
 						<img src="img/face1.gif" class="current" />
 						<img src="img/face2.gif" alt="" />
@@ -344,11 +344,13 @@
 								css(oParent,"opacity",(alpha -= 10));
 								if(alpha <= 0){
 									clearInterval(timer);
+									
 									timer = setInterval(function(){
 										css(oParent,"height",(iHeight -= 8)+"px");
 										if(iHeight <=0 ){
 											clearInterval(timer);
 											//要移动走oLi结构
+											css(oParent,"height","0");
 											oUl.removeChild(oParent);
 										};
 									},30);
@@ -360,17 +362,19 @@
 				}
 				delLi();
 				
-				//输入内容的时候的字符统计
+				//输入框获得焦点效果
+				for(var i=0; i<aFtxt.length; i++){
+					EventUtil.addHandler(aFtxt[i],"focus",function(){this.className = "active"});
+					EventUtil.addHandler(aFtxt[i],"blur",function(){this.className = ""});
+				}
 				
-				
-				//提交时检查用户名和内容
-				
-				//添加消息到list
-				//字符检测功能
-				
-					
-					
-				
+				//头像
+				for(var i=0; i<aImg.length; i++){
+					EventUtil.addHandler(aImg[i],"click",function(){
+						for(var p in aImg) aImg[p].className = ""; 
+						this.className = "current";
+					})
+				}
 				
 			});
 				
