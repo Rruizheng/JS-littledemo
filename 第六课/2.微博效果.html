@@ -68,7 +68,7 @@
 					<textarea id="conBox" class="f-text"></textarea>
 				</div>
 				<div class="tr">
-					<p><span>还能输入</span><strong class="maxNum">140</strong><span>个字</span>
+					<p><span class="countTxt">还能输入</span><strong class="maxNum">140</strong><span>个字</span>
 					<input type="button" id="sendBtn" value="" title="快捷键Ctrl+Enter" /></p>
 				</div>
 			</form>
@@ -189,7 +189,7 @@
 					oCountTxt = get.byClass("countTxt")[0],
 					oList = get.byClass("list")[0],
 					oUl = get.byTagName("ul",oList)[0],
-					oLi = get.byTagName("li",oList);
+					aLi = get.byTagName("li",oList);
 				var aFtxt = get.byClass("f-text",oMsgBox);
 				var aImg = get.byTagName("img",get.byId("face"));
 				var bSend = false;
@@ -212,8 +212,9 @@
 				
 				//发送广播函数
 				function fnSend(){
+					//检验用户名和输入的内容的格式
 					var reg = /^\s*$/g;
-					if(reg.test(oUserName.value)){
+					if(reg.test(oUserName.value)){ //开头或者结尾是空格、换行或者制表
 						alert("\u8bf7\u586b\u5199\u60a8\u7684\u59d3\u540d");//请输入您的姓名！
 						oUserName.focus();
 					}
@@ -225,19 +226,20 @@
 						alert("\u968f\u4fbf\u8bf4\u70b9\u4ec0\u4e48\u5427\uff01");
 						oConBox.focus();
 					}
-					else if(!bSend){
+					else if(!bSend){ //你输入的内容已超出限制，请检查！当bSend=false时。
 						alert("\u4f60\u8f93\u5165\u7684\u5185\u5bb9\u5df2\u8d85\u51fa\u9650\u5236\uff0c\u8bf7\u68c0\u67e5\uff01");
 						oConBox.focus();
 					}
+					//实现插入功能
 					else{
 						var oLi = document.createElement("li");
 						var oDate = new Date();
 						
 						oLi.innerHTML = "<div class=\"userPic\"><img src=\"" + get.byClass("current",get.byId("face"))[0].src + "\"></div>\
 						<div class=\"content\">\
-							<div class=\"userName\"><a href=\"javascript:;\">" + oUserName.value + "</a>:</div>\
+							<div class=\"userName\"><a href=\"javascript:;\">" + oUserName.value + "</a>：</div>\
 							<div class=\"msgInfo\">" + oConBox.value.replace(/<[^>]*>|&nbsp;/ig,"") + "</div>\
-							<div class=\"times\"><span>" + format(oDate.getMonth()+1) + "\u6708"+format(oDate.getDate()) + "\u65e5" + format(oDate.getHours()) + ":" + format(oDate.getMinutes()) + "</span><a class=\"del\" href=\"javascript:;\">\u5220\u9664</a></div>\
+							<div class=\"times\"><span>" + format(oDate.getMonth()+1) + "\u6708" + format(oDate.getDate()) + "\u65e5 " + format(oDate.getHours()) + ":" + format(oDate.getMinutes()) + "</span><a class=\"del\" href=\"javascript:;\"> \u5220\u9664</a></div>\
 						</div>";
 						
 						//插入元素
@@ -250,25 +252,55 @@
 							aImg[0].className = "current";
 						}
 						
-						//将元素的高度保存
-						var iHeight = oLi.clientHeight - parseFloat(css(oLi,"paddingTop")) - parseFloat(css(oLi,"paddingBottom"));
+						
+						//将元素的高度保存，逐渐显示的过程
+						var iHeight = oLi.clientHeight - parseFloat(css(oLi,"paddingTop"))-parseFloat(css(oLi,"paddingBottom"));
 						var alpha = count = 0;
-						css(oLi,{"opacity":"0","height":"0"});
-						timer = setInterval(function(){
-							css(oLi,{"display": "block","opacity":"0","height":(count += 8)+"px"});
-							if(count > iHeight){
+						//将高度设置为0
+						css(oLi,{"height":"0","opacity":"0"});
+						//逐渐增加高度
+						var timer = setInterval(function(){
+							css(oLi,{"dispaly":"block","height":(count+=8)+"px","opacity":"0"});
+							if(count>iHeight){
 								clearInterval(timer);
 								css(oLi,"height",iHeight+"px");
+								//逐渐显示出来
 								timer = setInterval(function(){
-									css(oLi,"opacity",(alpha += 10));
-									alpha > 100 && (clearInterval(timer),css(oLi,"opacity",100))
-								},30)
+									css(oLi,"opacity",(alpha+=10));
+									if(alpha > 100){
+										clearInterval(timer);
+										css(oLi,"opacity",100);
+									}
+								},30);
 							}
-							},30);
-							liHover();
-							delLi();
+						},30);
+						
+						//对新元素调用一遍滑过函数和删除函数
+						liHover();
+						delLi();
 					}
 				};
+				
+				//格式化时间，如果不够，补充一位0
+				function format(str){
+					return str.toString().replace(/^(\d)$/,"0$1");
+				}
+				
+				EventUtil.addHandler(oConBox,"keyup",confine);
+				EventUtil.addHandler(oConBox,"focus",confine);
+				EventUtil.addHandler(oConBox,"change",confine);
+				
+				function confine(){
+					//对输入字符逐一进行检验，是否是ASCII码在0~255之间，不是ilen+1，是+0.5。汉字是一个字节，其他是半个字节
+					var iLen = 0;
+					for(var i=0;i<oConBox.value.length;i++) iLen+=(/[^\x00-\xff]/g.test(oConBox.value.charAt(i)))?1:0.5;
+					oMaxNum.innerHTML = Math.abs(maxNum-Math.floor(iLen));
+					maxNum-Math.floor(iLen) >= 0 ? (css(oMaxNum,"color",""),bSend = true,oCountTxt.innerHTML="\u8fd8\u80fd\u8f93\u5165"): (css(oMaxNum,"color","#f60"),bSend = false,oCountTxt.innerHTML="\u5df2\u8d85\u51fa");
+					//没有超过最大值，那么，颜色不变，还能输入，可以发送。超过的话，颜色变红，超过多少字，不能发送。
+				};
+				//加载即调用；
+				confine();
+				//删除功能,删除的时候有一个逐渐消失的过程
 				
 				//输入内容的时候的字符统计
 				
@@ -277,7 +309,7 @@
 				
 				//添加消息到list
 				//字符检测功能
-				//删除功能
+				
 					
 					
 				
