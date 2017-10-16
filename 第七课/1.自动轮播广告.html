@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>自动轮播广告</title>
+		<style>
+			body,ul,li,div{margin: 0;padding: 0;}
+			body{background: black;text-align: center;font: 12px/20px arial;}
+			ul{list-style-type: none;}
+			#box{position:relative;margin: 10px auto;width: 492px;height: 172px;border: 8px solid #fff;border-radius: 5px;background: #fff;cursor: pointer;}
+			#box .list{width: 490px;height: 170px;position: relative;overflow: hidden;zoom: 1;}
+			#box .list ul{position: absolute;left: 0;top: 0;}
+			#box .list li{width: 490px;height: 170px;overflow: hidden;}
+			#box .count{position: absolute;right: 0;bottom: 5px;}
+			#box .count li{color: #fff;float: left;width: 20px;height: 20px;border-radius: 20px;background: #F90;margin-right: 5px;cursor: pointer;overflow: hidden;filter: alpha(opacity=70);opacity: 0.7;}
+			#box .count li.current{opacity: 1;font-weight: 700;filter: alpha(opacity=70);background: #f60;}
+			#tmp{width:100px;height:100px;background:red;position:absolute;}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div class="list">
+				<ul>
+					<li>
+						<img src="img/01.jpg" width="490" height="170"/>
+					</li>
+					<li>
+						<img src="img/02.jpg" width="490" height="170"/>
+					</li>
+					<li>
+						<img src="img/03.jpg" width="490" height="170"/>
+					</li>
+					<li>
+						<img src="img/04.jpg" width="490" height="170"/>
+					</li>
+					<li>
+						<img src="img/05.jpg" width="490" height="170"/>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script>
+			
+			window.onload = function(){
+				var oBox = document.getElementById("box");
+				var oList = oBox.getElementsByTagName("ul")[0];
+				var aImg = oList.getElementsByTagName("img");
+				var timer = playTimer = null;
+				var index = i = 0;
+				var aTmp = [];
+				var aBtn = null;
+				
+				//生成数字按键
+				for(i=0; i<aImg.length;i++) aTmp.push("<li>"+(i+1)+"</li>");
+				
+				//插入元素
+				var oCount = document.createElement("ul");
+				oCount.innerHTML = aTmp.join("");
+				oCount.className = "count";
+				oBox.appendChild(oCount);
+				aBtn = oCount.getElementsByTagName("li");
+				
+				//初始化
+				//按钮点击切换
+				iTarget =- index*aImg[0].offsetHeight; //不带px
+				//点击某个字母开始播放
+				for(i=0; i<aBtn.length; i++){
+					aBtn[i].index =i;
+					aBtn[i].onmouseover = function(){
+						index = this.index;
+						cutover();
+					}
+				}
+				function cutover(){
+					for(var p in aBtn) aBtn[p].className = "";
+					aBtn[index].className = "current";
+					startMove(-index*aImg[0].offsetHeight);
+				}
+
+				//开始移动,目标：oList.style.top == iTarget+"px"
+				function startMove(iTarget){
+					clearInterval(timer);
+					timer = setInterval(function(){doMove(iTarget)},30);
+				}
+				
+				function doMove(iTarget){
+				 var iSpeed = (iTarget - oList.offsetTop)/10;
+					iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+					oList.offsetTop == iTarget ? clearInterval(timer) : oList.style.top = oList.offsetTop + iSpeed + "px";  
+				}
+
+			}
+			
+		</script>
+	</body>
+</html>
