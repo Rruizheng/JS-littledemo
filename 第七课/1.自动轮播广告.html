@@ -49,6 +49,7 @@
 				var index = i = 0;
 				var aTmp = [];
 				var aBtn = null;
+				var bOrder = true;
 				
 				//生成数字按键
 				for(i=0; i<aImg.length;i++) aTmp.push("<li>"+(i+1)+"</li>");
@@ -61,8 +62,29 @@
 				aBtn = oCount.getElementsByTagName("li");
 				
 				//初始化
-				//按钮点击切换
-				iTarget =- index*aImg[0].offsetHeight; //不带px
+				cutover();
+				//连续播放
+				function next(){
+					//判断正序，还是倒叙
+					bOrder ? index++ : index--;
+					index <= 0 && (index = 0,bOrder=true);
+					index >= (aBtn.length-1) && (index = (aBtn.length-1),bOrder=false);
+					cutover();
+				}
+				
+				playTimer = setInterval(function(){
+					next();
+				},3000);
+				
+				//鼠标移入停止，移出继续播放
+				oBox.onmouseover = function(){
+					clearInterval(playTimer);
+				}
+				oBox.onmouseout = function(){
+					playTimer = setInterval(next,3000);
+				}
+				
+				
 				//点击某个字母开始播放
 				for(i=0; i<aBtn.length; i++){
 					aBtn[i].index =i;
@@ -88,7 +110,6 @@
 					iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
 					oList.offsetTop == iTarget ? clearInterval(timer) : oList.style.top = oList.offsetTop + iSpeed + "px";  
 				}
-
 			}
 			
 		</script>
