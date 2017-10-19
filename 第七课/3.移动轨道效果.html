@@ -3,7 +3,128 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>轨道移动</title>
+		<style>
+			body,div{margin:0;padding:0;}
+			div{position:absolute;width:66px;height:45px;background:url(img/1.gif) no-repeat;top:100px;left:50px;}
+			p,input{margin:10px;}
+		</style>
+		
 	</head>
 	<body>
+		<input type="button" value="根据鼠标点击位置移动" />
+		<input type="button" value="根据标鼠标轨迹移动" />
+		<p>请点击按钮激活功能！</p>
+		<div></div>
 	</body>
+	<script>
+		window.onload = function(){
+			var oInput = document.getElementsByTagName("input");
+			var oDiv = document.getElementsByTagName("div")[0];
+			var oP = document.getElementsByTagName("p")[0];
+			var aTarget = [];
+			var iTarget = null;
+			var iMove = false;
+			var aMove = false;
+			var aaMove = false;
+			var timer = null;
+		
+		    oInput[0].onclick = function(){
+		    	
+		    	aMove = false;
+		    	var event = event ||　window.event;
+		    	oInput[1].value = "根据标鼠标轨迹移动";
+		    	this.value = "根据鼠标点击位置移动(已激活)";
+		    	oP.innerHTML = "鼠标点击页面， 人物将移动至鼠标位置！"
+		    	if(iMove == false){
+		    	  event.cancelBubble = true;
+		    	}
+		    	
+		    	iMove = true;
+		    	
+		    }
+		   
+		    oInput[1].onclick = function(){
+				iMove = false;
+				oInput[0].value = "根据鼠标点击位置移动"
+		    	this.value = "根据标鼠标轨迹移动(已激活)";
+		    	oP.innerHTML = "按住鼠标左键，在页面划动，人物将按照鼠标轨迹移动。";
+		    	if(aMove == false){
+		    	event.cancelBubble = true;
+		    	}
+		    	
+		    	aMove = true;
+		    }
+		    
+		    document.onclick = function(){
+		    	if(iMove){
+  					aTarget.push({x:event.clientX,y:event.clientY});
+  					oDiv.style.background = "url(img/2.gif)";
+  					startMove(aTarget.pop());
+  				}
+		    	
+		    	if(aMove){
+		    		document.onmousedown = function(){
+		    			var event = event ||　window.event;
+		    			aaMove = true;
+		    			aTarget.push({x:event.clientX,y:event.clientY});
+		    			oDiv.style.background = "url(img/2.gif)";
+		    			this.setCapture && this.getCaptrue();
+		    			return false;
+		    		}
+		    		document.onmouseover = function(){
+		    			var event = event ||　window.event;
+		    			if(aaMove){
+		    				aTarget.push({x:event.clientX,y:event.clientY});
+		    				
+		    			}
+		    			event.cancelBubble = true;
+		    			return false;
+		    		}
+		    		document.onmouseup = function(){
+		    			var iiTarget = aTarget.shift();
+		    			oDiv.style.left = iiTarget.x + "px";
+		    			oDiv.style.top = iiTarget.y + "px";
+		    			
+		    			for(var i=0;i<aTarget.length;i++){
+		    				startMove(aTarget.shift());
+		    			}
+		    			aaMove =false;
+		    			return false;
+		    		}
+		    	}
+		    }
+			
+			
+			
+
+			function startMove(iTarget){
+				clearInterval(timer);
+				timer = setInterval(function(){
+					doMove(iTarget);
+				},30)
+			}
+			function doMove(iTarget){
+				var mX = document.documentElement.clientWidth - oDiv.offsetWidth;
+				var mY = document.documentElement.clientHeight - oDiv.offsetHeight;
+				iTarget.x <= 0 ?  0 : iTarget.x;
+				iTarget.y <= 0 ?  0 : iTarget.y;
+				iTarget.x >= mX ?  mX: iTarget.x;
+				iTarget.y >= mY ?  mY : iTarget.y;
+				var disX = oDiv.offsetLeft;
+				var disY = oDiv.offsetTop;
+				var xSpeed = (iTarget.x-disX)/5;
+				var ySpeed = (iTarget.y-disY)/5;
+				xSpeed = xSpeed > 0 ? Math.ceil(xSpeed):Math.floor(xSpeed);
+				ySpeed = ySpeed > 0 ? Math.ceil(ySpeed):Math.floor(ySpeed);
+				
+				if(disX == iTarget.x && disY == iTarget.y){
+					clearInterval(timer);
+					oDiv.style.background = "url(img/1.gif) no-repeat";
+				}else{
+					oDiv.style.left= disX + xSpeed + "px";
+					oDiv.style.top = disY + ySpeed + "px";
+				}
+			}	
+		}
+	</script>
 </html>
