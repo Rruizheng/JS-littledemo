@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>手机解锁</title>
+		<style>
+			#box1{position: relative;background: url(img/1.jpg) no-repeat;margin: 10px auto;width: 426px;height:640px;}
+			#box2{position: absolute;width: 100%;height: 100%;background: url(img/2.jpg) no-repeat;display: none;}
+			
+			#lock{background: url(img/btn.jpg) no-repeat; width: 93px;height: 62px;display: inline-block;position: absolute;left: 35px;top: 545px;cursor: pointer;}
+		</style>
+	</head>
+	<body>
+		<div id="box1">
+			<div id="lock"></div>
+			<div id="box2"></div>
+		</div>
+			
+		<script>
+			window.onload = function(){
+				var oLock = document.getElementById("lock");
+				var box1 = document.getElementById("box1"),
+				box2 = document.getElementById("box2");
+				var oL = box1.offsetLeft;
+				var timer = null;
+				
+				
+				oLock.onmousedown = function(event){
+					var event = event || window.event;
+					var oX = event.clientX - oL;
+					var minX =  oX;
+					var maxX =  425-35-93;
+					var midX = 218;
+					document.onmousemove = function(event){
+						var event = event || window.event;
+						var iX = event.clientX - oL;
+						if(iX<minX){
+							oLock.style.left = 35 + "px";
+						}
+						else if(iX>maxX){
+							oLock.style.left = 426-93-35 + "px";
+						}
+						else{
+							oLock.style.left = iX + "px";
+						}
+						return false;
+					}
+					document.onmouseup = function(event){
+						document.onmousemove = null;
+						var event = event || window.event;
+						var iX = event.clientX - oL;
+					
+						if(iX<midX){
+							startMove(35,null);
+						}
+						else if(iX>=midX){
+							startMove((426-93-35),function(){
+								box2.style.display = "block";
+							})
+						}
+					}
+					this.setCapture && this.setCapture();
+					return false;
+				}
+				
+				function startMove(iTarget,onEnd){
+					clearInterval(timer);
+					timer = setInterval(function(){
+						doMove(iTarget,onEnd);
+					},30);
+				}
+				function doMove(iTarget,onEnd){
+					var nowL = oLock.offsetLeft;
+					var iSpeed = (iTarget-nowL)/5;
+					iSpeed = iSpeed > 0? Math.ceil(iSpeed) : Math.floor(iSpeed);
+					
+					if(nowL == iTarget){
+						clearInterval(timer);
+						(onEnd) && onEnd();
+					}else{
+						oLock.style.left =nowL+ iSpeed + "px";
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
