@@ -43,20 +43,22 @@
 		    oInput[1].onclick = function(event){
 		    	(event || window.event).cancelBubble = true;
 				clearEvent();
-				oInput[0].value = "根据鼠标点击位置移动"
-		    	this.value = "根据标鼠标轨迹移动(已激活)";
-		    	oP.innerHTML = "按住鼠标左键，在页面划动，人物将按照鼠标轨迹移动。";
-		    	var aTarget = [{x:oDiv.offsetLeft, y:oDiv.offsetTop}];
-		    	document.onmousedown = function(event){
-		    		var event = event ||　window.event;
-	    			aTarget.push({x:event.clientX, y:event.clientY});
+				this.value += "(已激活)";
+				oP.innerHTML = "按住鼠标左键，在页面划动，人物将按照鼠标轨迹移动。"
+				//var aPos = [{x:oDiv.offsetLeft, y:oDiv.offsetTop}];
+		    	var aPos = [{x:oDiv.offsetLeft, y:oDiv.offsetTop}];
+		    	document.onmousedown = function (event)
+				{
+		    		var event = event || window.event;			
+					aPos.push({x:event.clientX, y:event.clientY});
 	    			//this.setCapture && this.getCaptrue();
 	    			document.onmousemove = function(event){
 		    			var event = event ||　window.event;
-		    			aTarget.push({x:event.clientX,y:event.clientY});
+		    			aPos.push({x:event.clientX,y:event.clientY});
 	    				return false;
 	    			}	
-					return false;	
+	    			
+					return false;
 		    	}
 		    	
 	    		document.onmouseup = function ()
@@ -66,12 +68,14 @@
 	    			oDiv.style.background = "url(img/2.gif) no-repeat";
 	    			//clearInterval(ftimer);
 	    			var timer = setInterval(function(){
-						if(aTarget.length == 0){
+						if(aPos.length == 0){
 							clearInterval(timer);
 							oDiv.style.background = "url(img/1.gif) no-repeat";
 							return;
 						};
-						idoMove(aTarget.shift());
+						oDiv.style.left = aPos[0].x + "px";
+						oDiv.style.top = aPos[0].y + "px";
+						aPos.shift();
 					}, 30);
 	    		};
 		    }
@@ -91,46 +95,6 @@
 			
 		}
 		
-		function startMove(iTarget){
-				clearInterval(timer);
-				timer = setInterval(function(){
-					doMove(iTarget);
-				},30)
-		}
-		function doMove(iTarget){
-			var mX = document.documentElement.clientWidth - oDiv.offsetWidth;
-			var mY = document.documentElement.clientHeight - oDiv.offsetHeight;
-			iTarget.x <= 0 ?  0 : iTarget.x;
-			iTarget.y <= 0 ?  0 : iTarget.y;
-			iTarget.x >= mX ?  mX: iTarget.x;
-			iTarget.y >= mY ?  mY : iTarget.y;
-			var disX = oDiv.offsetLeft;
-			var disY = oDiv.offsetTop;
-			var xSpeed = (iTarget.x-disX)/5;
-			var ySpeed = (iTarget.y-disY)/5;
-			xSpeed = xSpeed > 0 ? Math.ceil(xSpeed):Math.floor(xSpeed);
-			ySpeed = ySpeed > 0 ? Math.ceil(ySpeed):Math.floor(ySpeed);
-			
-			if(disX == iTarget.x && disY == iTarget.y){
-				clearInterval(timer);
-				oDiv.style.background = "url(img/1.gif) no-repeat";
-			}else{
-				oDiv.style.left= disX + xSpeed + "px";
-				oDiv.style.top = disY + ySpeed + "px";
-			}
-		}	
-		
-		function idoMove(iTarget){
-			var mX = document.documentElement.clientWidth - oDiv.offsetWidth;
-			var mY = document.documentElement.clientHeight - oDiv.offsetHeight;
-			iTarget.x <= 0 ?  0 : iTarget.x;
-			iTarget.y <= 0 ?  0 : iTarget.y;
-			iTarget.x >= mX ?  mX: iTarget.x;
-			iTarget.y >= mY ?  mY : iTarget.y;
-			
-			oDiv.style.left= iTarget.x + "px";
-			oDiv.style.top = iTarget.y + "px";
-		}	
-	}
+}
 	</script>
 </html>
