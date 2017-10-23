@@ -118,7 +118,7 @@
 				
 				
 				
-			/**	oBar.onmousedown = function(event){
+				oBar.onmousedown = function(event){
 					var event = event ||　window.event;
 					var disL = event.clientX - oBox.offsetLeft - oBarL.offsetWidth - oBar.offsetLeft;
 				
@@ -136,16 +136,16 @@
 						return false;
 					}
 					document.onmouseup = function(){
-						startMove(oUl, parseInt((oList.offsetWidth + iMarginRight - oUl.offsetWidth) * iScale));
+						
 						document.onmousemove = null;
-						//var iTarget = - parseInt(oBar.offsetLeft * 1520/maxL);
-						//startMove(oUl,iTarget);
+						var iTarget =  parseInt(oBar.offsetLeft) * 1520/maxL;
+						startMove(oUl,iTarget);
 						
 					}
 					return false;
 				}
 				
-			**/	
+			
 			}
 			function addHandler(elem,sEvent,fnHandler){
 				return elem.addEventListener ? elem.addEventListener(sEvent,fnHandler,false) : elem.attachEvent("on"+sEvent,fnHandler);
@@ -158,7 +158,7 @@
 			}
 			function doMove(obj,iTarget,fnEnd,buffer){
 				var iLeft = getStyle(obj,"left");
-				var iSpeed = (iTarget - iLeft) / (buffer || 5);
+				var iSpeed = (iTarget-iLeft)/5;
 				
 				iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
 				iLeft == iTarget ? (clearInterval(obj.timer) , fnEnd&&fnEnd()) : obj.style.left = iLeft + iSpeed + "px";
