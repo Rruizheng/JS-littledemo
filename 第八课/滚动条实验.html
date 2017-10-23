@@ -115,75 +115,20 @@
 				var maxL = oBarM.offsetWidth - oBar.offsetWidth;//可移动的最大距离
 				var iMarginRight = getStyle(aLi[0], "marginRight");
 				var iScall = 0;
-	
-				//拖动滚动条移动图片。
-				oBar.onmousedown = function(event){
-					var event = event ||　window.event;
-					var disL = event.clientX - oBox.offsetLeft - oBarL.offsetWidth - oBar.offsetLeft;
 				
-					
-					document.onmousemove = function(event){
-						var event = event ||　window.event;
-						var fnL = event.clientX - disL - oBox.offsetLeft - oBarL.offsetWidth;
-						if(fnL < 0 ){ 
-							fnL = 0 
-						}else if(fnL > maxL){
-							fnL = maxL
-						}
-						iScale = fnL / maxL;
-						oBar.style.left = fnL + "px";
-						iStop();
-						return false;
-					}
-					document.onmouseup = function(){
-						iTarget =  parseInt(oBar.offsetLeft) * (1520-oList.offsetWidth)/maxL;
-						//oUl.style.left = -iT + "px";
-						startMove(oUl,-iTarget);
-						document.onmousemove = null;
-					}
-					return false;
-				}
-				
-				//判断滚动条是否到边界，到了的话，把边界的按钮背景改一下
-				function iStop(){
-					(oBar.offsetLeft == 0) ? oBarL.className = "barLStop" : oBarL.className = "barL";
-					(oBar.offsetLeft == maxL) ? oBarR.className = "barRStop" : oBarR.className = "barR";
-				}
-				iStop();
-				
-				//阻止oBar冒泡
-				oBar.onclick = function(event){
-					(event || window.event).cancelBubble = true;
-				}
-				
-				//滚动条左右按钮鼠标移入及键盘左右键按下事件
-				
-				
-				//图片列表和滚动条一起移动
 				function MoveTogether(iTarget,buffer){
-					if (iTarget <= 0)
-					{
-						timer && clearInterval(timer);
-						iTarget = 0
-					}
-					else if (iTarget >= maxL)
-					{
-						timer && clearInterval(timer);
-						iTarget	= maxL
-					}
 					iScall = - (oUl.offsetWidth - oList.offsetWidth)/maxL;
 					startMove(oBar,iTarget,function(){
-						iStop();
+						
 					},buffer)
 					startMove(oUl,(iTarget*iScall),function(){
-						iStop();
+						
 					},buffer)
 				}
-			}
+				
+				MoveTogether(maxL,5);
 			
 			
-			function addHandler(elem,sEvent,fnHandler){
-				return elem.addEventListener ? elem.addEventListener(sEvent,fnHandler,false) : elem.attachEvent("on"+sEvent,fnHandler);
 			}
 			function startMove(obj,iTarget,fnEnd,buffer){
 				clearInterval(obj.timer);
