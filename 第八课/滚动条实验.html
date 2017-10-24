@@ -116,6 +116,30 @@
 				var iMarginRight = getStyle(aLi[0], "marginRight");
 				var iScall = 0;
 				
+				oBarL.onmouseover = oBarR.onmouseover = document.onkeydown = function (event)
+	{
+		clearInterval(timer);
+		var event = event || window.event;
+		var iSpeed = 0;
+		if (this == oBarR || event.keyCode == 39)
+		{
+			iSpeed = 5
+		}
+		else if(this == oBarL || event.keyCode == 37)
+		{
+			iSpeed = -5
+		}
+		timer = setInterval(function ()
+		{
+			togetherMove(getStyle(oBar, "left") + iSpeed, 1)	
+		}, 30)
+	};
+	//滚动条左右按钮鼠标移开及键盘左右键抬起事件
+	oBarL.onmouseout = oBarR.onmouseout = document.onkeyup = function ()
+	{
+		clearInterval(timer)	
+	};	
+				
 				function MoveTogether(iTarget,buffer){
 					iScall = - (oUl.offsetWidth - oList.offsetWidth)/maxL;
 					startMove(oBar,iTarget,function(){
