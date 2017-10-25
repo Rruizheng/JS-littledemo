@@ -17,49 +17,26 @@
 		<div id="drag2"></div>
 		
 		<script>
-			var zIndex = 1;
 			window.onload = function(){
 				var oDrag1 = document.getElementById("drag1");
 				var oDrag2 = document.getElementById("drag2");
 				
-				drag(oDrag1);
-				drag(oDrag2);
 			}
 			function drag(oDrag){
-				var disX = disY = null;
-				
+				var disX = disY = 0;
 				oDrag.onmousedown = function(event){
 					var event = event || window.event;
 					disX = event.clientX - this.offsetLeft;
-					disY = event.clientY - this.offsetTop;
 					
 					var oTemp = document.createElement("div");
 					oTemp["id"] = "temp";
-					oTemp.style.left = this.offsetLeft + "px";
-					oTemp.style.top = this.offsetTop + "px";
+					oTemp.style.left = "50px";
+					oTemp.style.top = "50px";
 					document.body.appendChild(oTemp);
-					oTemp.style.display = "block";
-					oTemp.style.zIndex =  zIndex++;
 					
 					document.onmousemove = function(event){
 						
-						var event = event || window.event;
-						oTemp.style.left = event.clientX - disX + "px";
-						oTemp.style.top = event.clientY - disY + "px";
-						return false;
 					}
-					document.onmouseup = function(event){
-						document.onmousemove = null;
-						document.onmouseup = null;
-						document.body.removeChild(oTemp);
-						var event = event || window.event;
-						oDrag.style.left = event.clientX - disX + "px";
-						oDrag.style.top = event.clientY - disY + "px";
-						oDrag.style.zIndex = zIndex++;
-						oDrag.releaseCapture && oDrag.releaseCapture();
-					}
-					this.setCapture && this.setCapture();
-					return false;
 				}
 			}
 			
