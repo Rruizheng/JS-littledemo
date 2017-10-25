@@ -27,6 +27,9 @@
 			}
 			function drag(oDrag){
 				var disX = disY = null;
+				var maxX = document.documentElement.clientWidth - oDrag.offsetWidth;
+				var maxY = document.documentElement.clientHeight - oDrag.offsetHeight;
+				
 				
 				oDrag.onmousedown = function(event){
 					var event = event || window.event;
@@ -42,10 +45,15 @@
 					oTemp.style.zIndex =  zIndex++;
 					
 					document.onmousemove = function(event){
-						
 						var event = event || window.event;
-						oTemp.style.left = event.clientX - disX + "px";
-						oTemp.style.top = event.clientY - disY + "px";
+						var oX = event.clientX - disX;
+						var oY = event.clientY - disY;
+						oX = oX >= maxX ? maxX : oX;
+						oY = oY >= maxY ? maxY : oY;
+						oX = oX <= 0 ? 0 : oX;
+						oY = oY <= 0 ? 0 : oY;
+						oTemp.style.left = oX+ "px";
+						oTemp.style.top = oY + "px";
 						return false;
 					}
 					document.onmouseup = function(event){
@@ -53,8 +61,15 @@
 						document.onmouseup = null;
 						document.body.removeChild(oTemp);
 						var event = event || window.event;
-						oDrag.style.left = event.clientX - disX + "px";
-						oDrag.style.top = event.clientY - disY + "px";
+							
+						var oX = event.clientX - disX;
+						var oY = event.clientY - disY;
+						oX = oX >= maxX ? maxX : oX;
+						oY = oY >= maxY ? maxY : oY;
+						oX = oX <= 0 ? 0 : oX;
+						oY = oY <= 0 ? 0 : oY;
+						oDrag.style.left = oX + "px";
+						oDrag.style.top = oY + "px";
 						oDrag.style.zIndex = zIndex++;
 						oDrag.releaseCapture && oDrag.releaseCapture();
 					}
