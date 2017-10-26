@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>拖曳改变大小</title>
+		<style>
+			body,html,div,h2,a{margin: 0; padding: 0;}
+			body{background: url(img/bg.jpg); font: 12px/1.5 "微软雅黑" #333;}
+			#box{background: #e9e9e9;width: 300px;height: 160px;border: 1px solid #444;border-radius: 5px;box-shadow: 0 1px 3px 2px #666;position: absolute;top: 100px;left: 100px;}
+			.title{position: relative;height: 27px;margin: 5px;cursor: move;}
+			.title h2{font-size: 14px;height: 27px;line-height: 24px;border-bottom: 1px solid #A1B4B0;}
+			.title div{position: absolute;top: 2px;right: 0;width: 78px;height: 19px;}
+			.title div a{width: 21px;height: 19px;margin: 0 0 0 5px;background: url(img/tool.png) no-repeat;display: block; float: left;}
+			a.open{position:absolute;top:10px;left:50%;margin-left:-10px;background-position:0 0;}
+			a.open:hover{background-position:0 -29px;}
+			.title a.min{background-position:-29px 0;}
+			.title a.min:hover{background-position:-29px -29px;}
+			.title a.max{background-position:-60px 0;}
+			.title a.max:hover{background-position:-60px -29px;}
+			.title a.revert{background-position:-149px 0;display:none;}
+			.title a.revert:hover{background-position:-149px -29px;}
+			.title a.close{background-position:-89px 0;}
+			.title a.close:hover{background-position:-89px -29px;}
+			.content{overflow:auto;margin:0 5px;}
+			.resizeBR{position:absolute;width:14px;height:14px;right:0;bottom:0;overflow:hidden;cursor:nw-resize;background:url(img/resize.png) no-repeat;}
+			.resizeB,.resizeBR,.resizeL,.resizeLB,.resizeLT,.resizeR,.resizeT,.resizeTR{position:absolute;background:#000;overflow:hidden;opacity:0;filter:alpha(opacity=0);}
+			
+			.resizeL,.resizeR{top:0;width:5px;height:100%;cursor:w-resize;}
+			.resizeR{right:0;}
+			.resizeT,.resizeB{width:100%;height:5px;cursor:n-resize;}
+			.resizeT{top:0;}
+			.resizeB{bottom:0;}
+			.resizeLT,.resizeTR,.resizeLB{width:8px;height:8px;background:#FF0;}
+			.resizeLT{top:0;left:0;cursor:nw-resize;}
+			.resizeTR{top:0;right:0;cursor:ne-resize;}
+			.resizeLB{left:0;bottom:0;cursor:ne-resize;}
+			
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div class="title">
+				<h2>这是一个可以拖动的窗口</h2>
+				<div>
+					<a class="min" href="javascript:;" title="最小化"></a>
+		            <a class="max" href="javascript:;" title="最大化"></a>
+		            <a class="revert" href="javascript:;" title="还原"></a>
+		            <a class="close" href="javascript:;" title="关闭"></a>
+				</div>
+			</div>
+			<div class="resizeL"></div>
+		    <div class="resizeT"></div>
+		    <div class="resizeR"></div>
+		    <div class="resizeB"></div>
+		    <div class="resizeLT"></div>
+		    <div class="resizeTR"></div>
+		    <div class="resizeBR"></div>
+		    <div class="resizeLB"></div>
+		    <div class="content">
+		    	① 窗口可以拖动；<br />
+		        ② 窗口可以通过八个方向改变大小；<br />
+		        ③ 窗口可以最小化、最大化、还原、关闭；<br />
+		        ④ 限制窗口最小宽度/高度。
+		    </div>
+		</div>
+	</body>
+</html>
