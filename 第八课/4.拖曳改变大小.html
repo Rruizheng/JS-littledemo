@@ -56,6 +56,18 @@
 			
 			var dragMinWidth = 250;
 			var dragMinHeight = 124;
+			var iL = iT = 0;
+			function iStop(oDrag,iL,iT){	
+				maxX = document.documentElement.clientWidth - oDrag.offsetWidth;
+				maxY = document.documentElement.clientHeight - oDrag.offsetHeight;
+				iL <= 0 && (iL = 0);
+				iT <= 0 && (iT = 0);
+				iL >= maxX && (iL = maxX);
+				iT >= maxY && (iT = maxY);	
+				oDrag.style.left = iL + "px";
+				oDrag.style.top = iT + "px";
+			}
+			
 			//拖曳
 			function drag(oDrag,handler){
 				var disX = disY = 0;
@@ -65,16 +77,7 @@
 				var oRevert = get.byClass("revert", oDrag)[0];
 				var oClose = get.byClass("close", oDrag)[0];
 				
-				function iStop(oDrag){
-					iL = event.clientX - disX;
-					iT = event.clientY - disY;
-					maxX = document.documentElement.clientWidth - oDrag.offsetWidth;
-					maxY = document.documentElement.clientHeight - oDrag.offsetHeight;
-					iL <= 0 && (iL = 0);
-					iT <= 0 && (iT = 0);
-					iL >= maxX && (iL = maxX);
-					iT >= maxY && (iT = maxY);	
-				}
+
 				
 				handler.onmousedown = function(event){
 					var event = event || window.event;
@@ -87,9 +90,9 @@
 						iL = event.clientX - disX;
 						iT = event.clientY - disY;
 						
-						iStop(oDrag);
-						oDrag.style.left = iL + "px";
-						oDrag.style.top = iT + "px";						
+						iStop(oDrag,iL,iT);
+						//oDrag.style.left = iL + "px";
+						//oDrag.style.top = iT + "px";						
 					}
 					document.onmouseup = function(){
 						document.onmousemove = null;
@@ -159,20 +162,67 @@
 						
 						var iL = event.clientX - disX;
 						var iT = event.clientY - disY;
-						var maxW = document.documentElement.clientWidth - oParent.offsetLeft - 2;
-						var maxH = document.documentElement.clientHeight - oParent.offsetTop - 2;	
+						var maxRW = document.documentElement.clientWidth - oParent.offsetLeft - 2;
+						var maxBH = document.documentElement.clientHeight - oParent.offsetTop - 2;	
+						var maxLW = iParentWidth + iParentLeft ;
+						var maxTH = iParentHeight+  iParentTop ;
 						
 						var iW = isLeft ? iParentWidth - iL : handle.offsetWidth + iL;
 						var iH = isTop ? iParentHeight - iT : handle.offsetHeight + iT;
+						
+						
+						isLeft && (iParentLeft+iL<0 ? oParent.style.left = oParent.style.left = 0 : oParent.style.left = iParentLeft + iL + "px");
+						isTop && (iParentTop+iT<0 ? oParent.style.top = oParent.style.top = 0 : oParent.style.top = iParentTop + iT + "px");
+						
+						iW<dragMinWidth && (iW = dragMinWidth);
+						iH<dragMinHeight && (iH = dragMinHeight);
+						
+						isLeft ? (iW>maxLW && (iW = maxLW)) : (iW>maxRW && (iW = maxRW));
+						isTop ? (iH>maxTH && (iH = maxTH)) : (iH>maxBH && (iH = maxBH));
+						
+						
+						lockX ||　(oParent.style.width = iW + "px");
+						lockY || (oParent.style.height = iH + "px");
+						
+						return false;
 					}
+					document.onmouseup = function(){
+						document.onmousemove = null;
+						document.onmouseup = null;
+					}
+					return false;
 				}
+				
 			}
 			
 			window.onload = function()
 			{
 				var oDrag = document.getElementById("drag");
 				var oTitle = get.byClass("title",oDrag)[0];
-				drag(oDrag,oTitle);
+				var oL = get.byClass("resizeL", oDrag)[0];
+				var oT = get.byClass("resizeT", oDrag)[0];
+				var oR = get.byClass("resizeR", oDrag)[0];
+				var oB = get.byClass("resizeB", oDrag)[0];
+				var oLT = get.byClass("resizeLT", oDrag)[0];
+				var oTR = get.byClass("resizeTR", oDrag)[0];
+				var oBR = get.byClass("resizeBR", oDrag)[0];
+				var oLB = get.byClass("resizeLB", oDrag)[0];
+				//拖曳
+				drag(oDrag, oTitle);
+				
+				//四边拉伸
+				resize(oDrag,oT,false,true,true,false);
+				resize(oDrag,oB,false,false,true,false);
+				resize(oDrag, oL, true, false, false, true);
+				resize(oDrag, oR, false, false, false, true);
+				
+				resize(oDrag, oLT, true, true, false, false);
+				resize(oDrag, oTR, false, true, false, false);
+				resize(oDrag, oBR, false, false, false, false);
+				resize(oDrag, oLB, true, false, false, false);
+				
+				oDrag.style.left = (document.documentElement.clientWidth - oDrag.offsetWidth) / 2 + "px";
+				oDrag.style.top = (document.documentElement.clientHeight - oDrag.offsetHeight) / 2 + "px";
 			}
 			//缩小
 			//放大
