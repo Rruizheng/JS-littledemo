@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>拼图游戏</title>
+		<style type="text/css">
+			body,ul,li,img{margin: 0;padding: 0;}
+			body{background: url(img/bg.png); font: 30px/1.5 tahoma;}
+			
+			ul{list-style-type: none;}
+			#photo{text-align: center;margin: 10px 0;height: 100px;}
+			#photo img{width: 100px;height: 100px;border-radius: 10px;margin: 0 5px;filter: alpha(opacity=50);opacity: 0.5;cursor: pointer;}
+			#photo img.selected{alpha(opacity=100);opacity: 1;border: 2px solid #FFCC00;width: 96px;height: 96px;}
+			#photo img:hover{alpha(opacity=100);opacity: 1;}
+			
+			input{cursor: pointer;margin: 0;}
+			
+			#box{width: 699px;height: 486px;margin: 10px auto;position: relative;}	
+			#box li{float: left;width: 233px;height: 162px;overflow: hidden;}
+			#box li img{width: 233px;height: 162px;}
+			#box li.hig{width: 229px;height: 158px;overflow: hidden;border: 2px dashed yellow;}
+			#box li.hig img{width: 229px;height: 158px;opacity: 0.5;filter: alpha(opacity=50);}
+			#mask{position: absolute;top:0;left: 0;width: 699px;height: 486px;background: red;opacity: 0;filter: alpha(opacity=0);}
+		</style>
+	</head>
+	<body>
+		<div id="photo"><img src="img/boy0/boy.png" class="selected" /><img src="img/boy1/boy.png" /><img src="img/boy2/boy.png" /></div>
+		<center><input type="button" value="开始游戏" /></center>
+		<ul id="box"></ul>
+	</body>
+	<script>
+		var zIndex = 1;
+		//获得最终样式
+		function getStyle(obj,attr){
+			return parseFloat(obj.currentStyle ? obj.currentStyle[attr] : getComputedStyle(obj,null)[attr]);
+		}
+		//运动框架
+		function startMove(obj,pos,onEnd){
+			clearInterval(obj.timer);
+			obj.timer = setInterval(function(){
+				doMove(obj,pos,onEnd);
+			},30);
+		}
+		function doMOve(obj,pos,onEnd){
+			var iCurL = getStyle(obj,"left");
+			var iCurT = getStyle(obj,"top");
+			
+			var iSpeedL = (pos.left - iCurL)/5;
+			var iSpeedT = (pos.left - iCurT)/5;
+			
+			iSpeedL = iSpeedL>0?Math.ceil(iSpeedL):Math.floor(iSpeedL);
+			iSpeedT = iSpeedT>0?Math.ceil(iSpeedT):Math.floor(iSpeedT);
+			
+			if(pos.left == iCurL && pos.top == iCurT){
+				clearInterval(obj.timer);
+				onEnd && onEnd();
+			}else{
+				obj.style.left = iCurL + iSpeedL + "px";
+				obj.style.top = iCurT + iSpeedT + "px";
+			}
+		}
+		//求两点间的距离
+		function getDistance(obj1,obj2){
+			var a = (obj1.offsetWidth/2 + obj1.offsetLeft) - (obj2.offsetWidth/2 + obj2.offsetLeft);
+			var b = (obj1.offsetHeight/2 + obj1.offsetTop) - (obj2.offsetHeight/2 + obj2.offsetTop);
+			return Math.sqrt(a*a+b*b);
+		}
+		
+		window.onload = function(){
+			var oPhoto = document.getElementById("photo");
+			var aThumb = oPhoto.getElementsByTagName("img");
+			var oBtn = document.getElementsByTagName("center")[0];
+			var oBox = document.getElementById("box");
+			var aLi = oBox.getElementsByTagName("li");
+			
+			var i = 0;
+			var aPos = [];
+			var aData = [];
+			var imgPath = 0;
+			var oDateStart = null;
+			
+			for(i=0;i<9;i++) aData.push(i+1);
+			
+			//缩略图
+			for(i=0;i<aThumb.length;i++){
+				aThumb[i].index = i;
+				
+				aThumb[i].onclick = function(){
+					for (i = 0; i < aThumb.length; i++)aThumb[i].className = "";	
+					this.className = "selected";
+					imgPath = this.index;
+					oBox.innerHTML = "";
+					oBtn.value = "开始游戏";
+					createMask();
+					aData.sort(function(a,b) {return (a-b)});
+					Game(false);
+					
+				}
+			}
+			
+			//创建遮罩层
+			function createMask(){
+				var oMask = document.createElement("div");
+				oMask.id = "mask";
+				oMask.style.zIndex = zIndex;
+				oBox.appendChild(oMask);
+			}
+			createMask();
+			
+			//游戏处理函数
+			function Game(ran){
+				//随机排列数组
+				ran && aData.sort(function(a,b){return Math.random()>0.5 ? -1 : 1});
+				//插入结构
+				var oFragment = document.createDocumentFragment();
+				for(i=0;i<aData.length;i++){
+					var oLi = document.createElement("li");
+					var oImg = document.createElement("img");
+					oImg.src = "img/boy"+imgPath+"/(" + aData[i] + ").gif"
+					oLi.appendChild(oImg);
+					oFragment.appendChild(oLi);
+				}
+				oBox.appendChild(oFragment);
+				oBox.style.background = "url(img/boy" + imgPath + "/bd.png) no-repeat";
+				
+			}
+			Game();
+			//开始游戏
+			oBtn.onclick = function(){
+				oDateStart = new Date();
+				oBox.innerHTML = "";
+				this.value = "\u91cd\u65b0\u5f00\u59cb"
+				Game(true);
+			}
+			
+		}
+		
+	</script>
+</html>
