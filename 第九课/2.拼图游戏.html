@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body,ul,li,img{margin: 0;padding: 0;}
+			body{background: url(img/bg.png); font: 30px/1.5 tahoma;}
+			
+			ul{list-style-type: none;}
+			#photo{text-align: center;margin: 10px 0;height: 100px;}
+			#photo img{width: 100px;height: 100px;border-radius: 10px;margin: 0 5px;filter: alpha(opacity=50);opacity: 0.5;cursor: pointer;}
+			#photo img.selected{alpha(opacity=100);opacity: 1;border: 2px solid #FFCC00;width: 96px;height: 96px;}
+			#photo img:hover{alpha(opacity=100);opacity: 1;}
+			
+			input{cursor: pointer;margin: 0;}
+			
+			#box{width: 699px;height: 486px;margin: 10px auto;position: relative;}	
+			#box li{float: left;width: 233px;height: 162px;overflow: hidden;}
+			#box li img{width: 233px;height: 162px;}
+			#box li.hig{width: 229px;height: 158px;overflow: hidden;border: 2px dashed yellow;}
+			#box li.hig img{width: 229px;height: 158px;opacity: 0.5;filter: alpha(opacity=50);}
+			#mask{position: absolute;top:0;left: 0;width: 699px;height: 486px;background: red;opacity: 0;filter: alpha(opacity=0);}
+			
+			
+		
+		</style>
+	</head>
+	
+	<body>
+		<div id="photo"><img src="img/boy0/boy.png" class="selected"/><img src="img/boy1/boy.png"/><img src="img/boy2/boy.png"/></div>
+		<center><input type="button" value="开始游戏" /></center>
+		<ul id="box">
+			<li>
+				<img src="img/boy0/(1).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(2).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(3).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(4).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(5).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(6).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(7).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(8).gif"/>
+			</li>
+			<li>
+				<img src="img/boy0/(9).gif"/>
+			</li>
+		</ul>
+		
+		<script>
+			window.onload = function(){
+				var oPhoto = document.getElementById("photo");
+				var aImg = oPhoto.getElementsByTagName("img");
+				var oBtn = document.getElementsByTagName("center")[0];
+				//var oUl = document.getElementsByTagName("ul")[0];
+				//var oPic = oUl.getElementsByTagName("img");
+				var i = 0;
+				var aPic = [];
+				var aLi = [];
+				
+				for(i=0;i<aImg.length;i++){
+					
+					aImg[i].index = i;
+					aImg[i].onclick = function(){
+						document.body.removeChild(document.getElementsByTagName("ul")[0]);
+						
+						for(var p in aImg) aImg[p].className = "";
+						this.className = "selected";
+						
+						var m = this.index;
+						var oUl = docuemnt.createElement("ul");
+						oUl[id] = "box";
+						document.body.appendChild(oUl);
+						var oUl = document.getElementsByTagName("ul")[0];
+						for(var n=1;n<=9;n++){
+							var iLi = document.createElement("li");
+							var iPic = document.createElement("img");
+							iPic.src =  "img/boy"+m+"/(" + n + ").gif";
+							
+							iLi.appendChild(iPic);
+							oUl.appendChild(iLi);	
+						}	
+					};
+					
+				}
+				
+				
+			}
+		</script>
+	</body>
+</html>
