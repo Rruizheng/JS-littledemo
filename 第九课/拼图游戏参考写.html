@@ -41,12 +41,12 @@
 				doMove(obj,pos,onEnd);
 			},30);
 		}
-		function doMOve(obj,pos,onEnd){
+		function doMove(obj,pos,onEnd){
 			var iCurL = getStyle(obj,"left");
 			var iCurT = getStyle(obj,"top");
 			
 			var iSpeedL = (pos.left - iCurL)/5;
-			var iSpeedT = (pos.left - iCurT)/5;
+			var iSpeedT = (pos.top- iCurT)/5;
 			
 			iSpeedL = iSpeedL>0?Math.ceil(iSpeedL):Math.floor(iSpeedL);
 			iSpeedT = iSpeedT>0?Math.ceil(iSpeedT):Math.floor(iSpeedT);
@@ -59,17 +59,33 @@
 				obj.style.top = iCurT + iSpeedT + "px";
 			}
 		}
-		//求两点间的距离
+		//求两点重心间的距离
 		function getDistance(obj1,obj2){
 			var a = (obj1.offsetWidth/2 + obj1.offsetLeft) - (obj2.offsetWidth/2 + obj2.offsetLeft);
 			var b = (obj1.offsetHeight/2 + obj1.offsetTop) - (obj2.offsetHeight/2 + obj2.offsetTop);
 			return Math.sqrt(a*a+b*b);
 		}
+		//判断是否碰撞
+		function isBuff(obj1,obj2){
+			//四条边的位置
+			var l1 = obj1.offsetLeft;
+			var t1 = obj1.offsetTop;
+			var r1 = obj1.offsetLeft + obj1.offsetWidth;
+			var b1 = obj1.offsetTop + obj1.offsetHeight;
+			
+			var l2 = obj2.offsetLeft;
+			var t2 = obj2.offsetTop;
+			var r2 = obj2.offsetLeft + obj2.offsetWidth;
+			var b2 = obj2.offsetTop + obj2.offsetHeight;
+			
+			//isBuff是true有碰到的地方，false没有碰到的地方。
+			return !(r1 < l2 || b1 < t2 || r2 < l1 || b2 < t1)
+		}
 		
 		window.onload = function(){
 			var oPhoto = document.getElementById("photo");
 			var aThumb = oPhoto.getElementsByTagName("img");
-			var oBtn = document.getElementsByTagName("center")[0];
+			var oBtn = document.getElementsByTagName("input")[0];
 			var oBox = document.getElementById("box");
 			var aLi = oBox.getElementsByTagName("li");
 			
@@ -92,7 +108,7 @@
 					oBox.innerHTML = "";
 					oBtn.value = "开始游戏";
 					createMask();
-					aData.sort(function(a,b) {return (a-b)});
+					aData.sort(function(a,b) {return (a-b)});//从小到大排列；
 					Game(false);
 					
 				}
@@ -122,7 +138,89 @@
 				}
 				oBox.appendChild(oFragment);
 				oBox.style.background = "url(img/boy" + imgPath + "/bd.png) no-repeat";
+				//布局改变
+				for(i=0;i<aLi.length;i++){
+					aLi[i].index = i;
+					aLi[i].style.left = aLi[i].offsetLeft + "px";
+					aLi[i].style.top = aLi[i].offsetTop + "px";
+					aPos.push({"left":aLi[i].offsetLeft,"top":aLi[i].offsetTop});
+				}
+				for(i=0;i<aLi.length;i++){
+					aLi[i].style.position = "absolute";
+					aLi[i].style.margin = 0;
+					
+					drag(aLi[i]);
+					//aLi[i].left = aPos[i].left;
+					//aLi[i].top = aPos[i].top;
+				}
+				//
 				
+				//拖曳函数
+				function drag(obj,handle){
+					var handle = obj || handle;
+					handle.style.cursor = "move";
+					var oNear = null;
+					
+					handle.onmousedown = function(event){
+						obj.style.zIndex = zIndex++;
+						var event = event || window.event;
+						var disX = event.clientX - this.offsetLeft;
+						var disY = event.clientY - this.offsetTop;
+						var maxL = oBox.offsetWidth - this.offsetWidth;
+						var maxT = oBox.offsetHeight - this.offsetHeight;
+						document.onmousemove = function(event){
+							var event = event || window.event;
+							var iL = event.clientX - disX;
+							var iT = event.clientY - disY;
+							iL = iL < 0 ? 0 : iL;
+							iT = iT < 0 ? 0 : iT;
+							iL = iL > maxL ? maxL : iL;
+							iT = iT > maxT ? maxT : iT;
+							
+							obj.style.left = iL + "px";
+							obj.style.top = iT + "px";
+							
+							for(var p in aLi) aLi[p].className = "";
+							oNear = findNear(handle);
+							oNear.className = "hig";
+							return false;
+						}
+						document.onmouseup = function(){
+							document.onmousemove = null;
+							//document.onmouseup = null;
+							oNear = findNear(handle);
+							oNear.style.diaplay = "none";
+							startMove(handle,oNear,function(){
+								
+							})
+							
+							
+							
+							this.releaseCapture && this.releaseCapture();
+						}
+						this.setCapture && this.setCapture();
+						return false;
+					}
+				}
+				
+				function findNear(obj){
+					var filterLi = [];
+					var aDis = [];
+					
+					for(i=0;i<aLi.length;i++){
+						(aLi[i]!=obj && isBuff(obj,aLi[i])) && (aDis.push(getDistance(aLi[i],obj)),filterLi.push(aLi[i]));
+					}
+					
+					var minNum = Number.MAX_VALUE;
+					var minLi = null;
+					
+					for(i=0;i<aDis.length;i++){
+						aDis[i] < minNum &&(minNum=aDis[i],minLi = filterLi[i]);
+					}
+					return minLi;
+					
+				}
+
 			}
 			Game();
 			//开始游戏
