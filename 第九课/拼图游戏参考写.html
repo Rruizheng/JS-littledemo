@@ -126,6 +126,7 @@
 			//游戏处理函数
 			function Game(ran){
 				//随机排列数组
+				
 				ran && aData.sort(function(a,b){return Math.random()>0.5 ? -1 : 1});
 				//插入结构
 				var oFragment = document.createDocumentFragment();
@@ -187,15 +188,34 @@
 						}
 						document.onmouseup = function(){
 							document.onmousemove = null;
-							//document.onmouseup = null;
-							oNear = findNear(handle);
-							oNear.style.diaplay = "none";
-							startMove(handle,oNear,function(){
-								
-							})
+							document.onmouseup = null;
 							
-							
-							
+							if(oNear){
+								oNear.className = "";
+								var m = obj.index;
+								var n = oNear.index;
+								obj.index = n;
+								oNear.index = m;
+								startMove(obj,aPos[n]);
+								startMove(oNear,aPos[m],function(){
+									if(isFinish()){
+										var iHour = iMin = iSec = 0;
+										var oDateNow = new Date();
+										var iRe = parseInt((oDateNow.getTime()-oDateStart.getTime())/1000);
+										//iRe 单位 秒
+										iHour = parseInt(iRe/3600);
+										iRe %= 3600;
+										iMin = parseInt(iRe/60);
+										iRe %= 60;
+										iSec = parseInt(iRe/60);
+										alert("完成用时："+iHour+"时"+iMin+"分"+iSec+"秒");
+										createMask();
+									}
+								});
+							}else{
+								startMove(obj,aPos[obj.index]);
+							}
+	
 							this.releaseCapture && this.releaseCapture();
 						}
 						this.setCapture && this.setCapture();
@@ -206,7 +226,6 @@
 				function findNear(obj){
 					var filterLi = [];
 					var aDis = [];
-					
 					for(i=0;i<aLi.length;i++){
 						(aLi[i]!=obj && isBuff(obj,aLi[i])) && (aDis.push(getDistance(aLi[i],obj)),filterLi.push(aLi[i]));
 					}
@@ -218,19 +237,46 @@
 						aDis[i] < minNum &&(minNum=aDis[i],minLi = filterLi[i]);
 					}
 					return minLi;
-					
+				}
+				function isFinish(){
+					/**var iF=0;
+					aData.sort(function(a,b){return a-b;})
+					for(i=0;i<aData.length;i++){
+						
+						var oIm = aLi[aLi[i].index].getElementsByTagName("img")[0];
+						(oIm.src.match(/^[img]*$/) ==  ("img/boy"+imgPath+"/(" + aData[i] + ").gif")) && (iF++);
+					}
+					(iF == (aLi.length)) ? (isF = true) : (isF = false);
+					return isF;**/
+					var aTemp = [];
+					var success = true;
+					aTemp.length = 0;
+					for (i = 0; i < aLi.length; i++)
+					{
+						for (var j = 0; j < aLi.length; j++)
+						i == aLi[j]["index"] && aTemp.push(aLi[j].getElementsByTagName("img")[0].src.match(/\(\d{1}\)/))
+					}
+					for (i = 1; i <= aTemp.length; i++)
+					{
+						if(i != aTemp[i-1])
+						{
+							success = false;
+							break
+						}
+					}
+				return success
 				}
 
 			}
 			Game();
 			//开始游戏
 			oBtn.onclick = function(){
+				//设置开始时间
 				oDateStart = new Date();
 				oBox.innerHTML = "";
 				this.value = "\u91cd\u65b0\u5f00\u59cb"
 				Game(true);
 			}
-			
 		}
 		
 	</script>
