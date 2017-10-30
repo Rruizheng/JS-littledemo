@@ -207,7 +207,7 @@
 										iRe %= 3600;
 										iMin = parseInt(iRe/60);
 										iRe %= 60;
-										iSec = parseInt(iRe/60);
+										iSec = iRe;
 										alert("完成用时："+iHour+"时"+iMin+"分"+iSec+"秒");
 										createMask();
 									}
@@ -239,16 +239,17 @@
 					return minLi;
 				}
 				function isFinish(){
-					/**var iF=0;
+					var iF=0;
 					aData.sort(function(a,b){return a-b;})
 					for(i=0;i<aData.length;i++){
-						
-						var oIm = aLi[aLi[i].index].getElementsByTagName("img")[0];
-						(oIm.src.match(/^[img]*$/) ==  ("img/boy"+imgPath+"/(" + aData[i] + ").gif")) && (iF++);
-					}
+						for(var p=0; p<aLi.length;p++){
+							if(aLi[p].index == i){
+								var oIm = aLi[p].getElementsByTagName("img")[0];
+								(oIm.src ==  ("file:///E:/%E4%B8%AA%E4%BA%BA%E8%A7%84%E5%88%92/%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/JS%E7%BB%84%E4%BB%B6/JS-littledemo/%E7%AC%AC%E4%B9%9D%E8%AF%BE/"+"img/boy"+imgPath+"/(" + aData[i] + ").gif")) && (iF++);}
+					}}
 					(iF == (aLi.length)) ? (isF = true) : (isF = false);
-					return isF;**/
-					var aTemp = [];
+					return isF;
+				/*	var aTemp = [];
 					var success = true;
 					aTemp.length = 0;
 					for (i = 0; i < aLi.length; i++)
@@ -264,7 +265,7 @@
 							break
 						}
 					}
-				return success
+				return success*/
 				}
 
 			}
