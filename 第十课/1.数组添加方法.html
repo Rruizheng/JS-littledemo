@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>数组添加方法</title>
+	</head>
+	<body>
+		
+	</body>
+	<script>
+		Array.prototype.sum = function(){
+			for(var sum=0,i=0;i<this.length;i++){
+				sum += parseInt(this[i]);
+			}
+			return sum;
+		}
+		Array.prototype.max = function(){
+			for(var i=0, maxi = Number.MIN_VALUE;i<this.length;i++){
+				parseInt(this[i])>maxi && (maxi = this[i])
+			}
+			return maxi;
+		}
+		
+		var arry = [2,3,4,5,6,7];
+		alert(arry.sum());
+			
+	
+	</script>
+</html>
