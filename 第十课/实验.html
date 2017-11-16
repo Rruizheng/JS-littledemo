@@ -7,14 +7,14 @@
 			body,div,ul,li,h2{margin: 0;padding: 0;}
 			body{font: 12px/1.5 arial;}
 			ul{list-style-type: none;}
-			.box{width:860px;height: 891px;border: 1px solid #999;margin: 10px auto;background: #eee;overflow: hidden;}
+			.box{width:860px;border: 1px solid #999;margin: 10px auto;background: #eee;overflow: hidden;}
 			.title{height: 30px;border-bottom: 1px solid #999;line-height: 30px;position: relative;background:#fafafa url(img/ico.gif) no-repeat 5px 50%;padding: 0 15px 0 35px;}
 			.title span{font-size: 14px;float: left;}
 			.title a{font-size: 14px;float: right;}
 			.title a:hover{color: red;}
 			.box ul{padding: 5px;}
 			
-			.box li{width:150px;height: 150px;float: left;padding: 4px;border: 1px solid #999;margin: 5px;background: #fff;display: inline;}
+			.box li{width:150px;height: 150px;float: left;padding: 4px;border: 1px solid #999;margin: 5px;background: #fff;display: inline;list-style:none;}
 			.box li.hig{border:2px dashed red;padding: 3px;opacity:0.5;filter:alpha(opacity=50);}
 			img{float:left;width: 150px;height:150px;}
 			
@@ -26,7 +26,7 @@
 				<span>
 					照片墙
 				</span>
-				<a href="">随机排列</a>
+				<a href="javascript:;" class="order">随机排列</a>
 			</h2>
 			<ul>
 	
@@ -42,47 +42,40 @@
 			<ul>
 			</ul>
 		</div>
-		<script>
-			//获取ID
-			var $ = function(id){
-				return typeof id === "string" ? document.getElementById(id) : id;
-			}
-			
-			//获取TagName
-			var $$ = function(tagName,oParent){
-				return (oParent || document).getElementsByTagName(tagName);
-			}
-			
-			//获取className
-			var $$$ = function(sClass,oParent){
-				var aClass = [];
-				var i = 0;
-				var reClass = new RegExp("(\\s|^)"+sClass+"($|\\s)");
-				var aElement = $$("*",oParent);
-				
-				for(i=0;i<aElement.length;i++){
-					reClass.test(aElement[i].className) && aClass.push(aElement[i]);
-				}
-				return aClass;
-			}
-			
-			//获取元素位置
-			function getPos(obj){
-				var iTop = obj.offsetTop;
-				var iLeft = obj.offsetLeft;
-				while(obj.offsetParent){
-					iTop += obj.offsetParent.offsetTop;
-					iLeft +=obj.offsetParent.offsetLeft;
-					obj = obj.offsetParent;
-				}
-				return {top:iTop,left:iLeft}
-			}
-			
-			//插入照片墙
-			var PhotoWall = function(){
-				this.initialize.apply(this,arguments);
-			}
-			PhotoWall.prototype = {
+		<script type="text/javascript">
+//获取ID
+var $ = function (id) {return typeof id === "string" ? document.getElementById(id) : id};
+
+//获取tagName
+var $$ = function (tagName, oParent) {return (oParent || document).getElementsByTagName(tagName)};
+
+//获取class
+var $$$ = function (sClass, oParent) {
+	var aClass = [],
+	i = 0,
+	reClass = new RegExp("(\\s|^)" + sClass + "($|\\s)"),
+	aElement = $$("*", oParent);
+	for (i = 0; i < aElement.length; i++)reClass.test(aElement[i].className) && aClass.push(aElement[i]);
+	return aClass
+};
+
+//获取元素位置
+function getPos(obj) {
+	var iTop = obj.offsetTop;
+	var iLeft = obj.offsetLeft;
+	while (obj.offsetParent)
+	{
+		iTop += obj.offsetParent.offsetTop;
+		iLeft += obj.offsetParent.offsetLeft;
+		obj = obj.offsetParent;
+	}
+	return {top:iTop, left:iLeft}	
+};
+
+//创建照片墙对象
+var PhotoWall = function () {this.initialize.apply(this, arguments)};
+
+PhotoWall.prototype = {
 	initialize: function (obj, aData)
 	{
 		var oThis = this;
@@ -110,9 +103,9 @@
 		}
 		this.oUl.appendChild(aFrag);
 		this.aLi = $$("li", this.oParent);
-		this.changeLayout()},
-				
-				changeLayout: function ()
+		this.changeLayout()
+	},
+	changeLayout: function ()
 	{
 		var i = 0;
 		this.oParent.style.height = this.oParent.offsetHeight - 2 + "px";
@@ -123,11 +116,11 @@
 			this.aLi[i].index = i;
 			this.aLi[i].style.top = getPos(this.aLi[i]).top + "px";
 			this.aLi[i].style.left = getPos(this.aLi[i]).left + "px";
-			this.aPos.push({left:getPos(this.aLi[i]).left, top:getPos(this.aLi[i]).top})
+			this.aPos.push({left:getPos(this.aLi[i]).left, top:getPos(this.aLi[i]).top});
 		}
 		for (i = 0; i < this.aLi.length; i++)
 		{
-			this.aLi[i].style.position = "absolute";	
+			this.aLi[i].style.position =                                 "absolute";	
 			this.aLi[i].style.margin = "0";			
 			this.drag(this.aLi[i])
 		}	
@@ -261,27 +254,27 @@
 			this.doMove(this.aLi[i], this.aPos[i])
 		}
 	}
-			}
-			window.onload = function(){
-				var aBox = $$$("box");
-				var aData = [];
-				var aExample = [];
-				
-				for(var i=0;i<20;i++){
-					aData[aData.length]="img/zyx/"+i+".jpg";
-				}
-				
-				for(var i=0;i<aBox.length;i++){
-					var oExample = new PhotoWall(aBox[i],aData);
-					aExample.push(oExample);
-				}
-				this.onresize = function(){
-					for(var p in aExample) aExample[p].changeLayout();
-				}
-				this.onresize();
-			}
-			
-			
-		</script>
+};
+window.onload = function ()
+{
+	var aBox = $$$("box");
+	var aData = [];
+	var aExample = [];
+	var i = 0;
+	//生成图片数据
+	for (i = 0; i < 20; i++) aData[aData.length] = "img/zyx/" + i + ".jpg";
+	//循环创建多个实例
+	for (i = 0; i < aBox.length; i++)
+	{
+		var oExample = new PhotoWall(aBox[i], aData);
+		aExample.push(oExample)
+	}
+	this.onresize = function ()
+	{
+		for (var p in aExample) aExample[p].changeLayout();	
+	};
+	this.onresize()
+};
+</script>
 	</body>
 </html>

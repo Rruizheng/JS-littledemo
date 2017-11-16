@@ -12,7 +12,7 @@
 			.title span{font-size: 14px;float: left;}
 			.title a{font-size: 14px;float: right;}
 			.title a:hover{color: red;}
-			.box ul{padding: 5px;}
+			.box ul{padding: 5px;position: relative;height: 851px;}
 			
 			.box li{width:150px;height: 150px;float: left;padding: 4px;border: 1px solid #999;margin: 5px;background: #fff;display: inline;}
 			.box li.hig{border:2px dashed red;padding: 3px;opacity:0.5;filter:alpha(opacity=50);}
@@ -26,7 +26,7 @@
 				<span>
 					照片墙
 				</span>
-				<a href="">随机排列</a>
+				<a href="javascript:;" >随机排列</a>
 			</h2>
 			<ul>
 	
@@ -37,7 +37,7 @@
 				<span>
 					照片墙
 				</span>
-				<a href="">随机排列</a>
+				<a href="javascript:;">随机排列</a>
 			</h2>
 			<ul>
 			</ul>
@@ -66,17 +66,36 @@
 				return aClass;
 			}
 			
-			//获取元素位置
+			//获取元素相对父元素位置
 			function getPos(obj){
 				var iTop = obj.offsetTop;
 				var iLeft = obj.offsetLeft;
-				while(obj.offsetParent){
-					iTop += obj.offsetParent.offsetTop;
-					iLeft +=obj.offsetParent.offsetLeft;
-					obj = obj.offsetParent;
-				}
 				return {top:iTop,left:iLeft}
 			}
+			//获取元素相对于window的位置
+			function getPPos(obj) {
+				var iTop = obj.offsetTop;
+				var iLeft = obj.offsetLeft;
+				while (obj.offsetParent)
+				{
+					iTop += obj.offsetParent.offsetTop;
+					iLeft += obj.offsetParent.offsetLeft;
+					obj = obj.offsetParent;
+				}
+				return {top:iTop, left:iLeft}	
+			};
+			//获取父元素相对于window的位置。
+			function getPPPos(obj) {
+				var iTop = 0;
+				var iLeft = 0;
+				while (obj.offsetParent)
+				{
+					iTop += obj.offsetParent.offsetTop;
+					iLeft += obj.offsetParent.offsetLeft;
+					obj = obj.offsetParent;
+				}
+				return {top:iTop, left:iLeft}	
+			};
 			
 			//插入照片墙
 			var PhotoWall = function(){
@@ -118,7 +137,7 @@
 					}
 					//按顺序把每个Li原始的位置保存下来，并且作为top,left参数赋值给原来的对象，存在aPos里面；
 					for(var i=0;i<this.aLi.length;i++){
-						this.aLi[i].index = 1;
+						this.aLi[i].index = i;
 						this.aLi[i].style.top = getPos(this.aLi[i]).top + "px";
 						this.aLi[i].style.left = getPos(this.aLi[i]).left + "px";
 						this.aPos.push({left:getPos(this.aLi[i]).left,top:getPos(this.aLi[i]).top});
@@ -131,7 +150,56 @@
 					}
 				},
 				drag:function(obj,handler){
+					var oThis = this;
+					var handler = handler || obj;
+					handler.style.cursor = "move";
 					
+					handler.onmousedown = function(event){
+						var event = event || window.event;
+						handler.style.zIndex = oThis.zIndex++;
+						var disX = event.clientX - getPPos(handler).left;
+						var disY = event.clientY- getPPos(handler).top;
+						var maxX = handler.offsetParent.clientWidth-handler.offsetWidth;
+						var maxY = handler.offsetParent.clientHeight - handler.offsetHeight;
+						var oNear = null;
+						document.onmousemove = function(event){
+							var event = event || window.event;
+							
+							var iL = event.clientX - (disX + getPPPos(handler).left);
+							var iT = event.clientY - (disY + getPPPos(handler).top);		
+							iL<0 && (iL=0);
+							iT<0 && (iT=0);
+							iL>maxX && (iL=maxX);
+							iT>maxY && (iT=maxY);		
+							handler.style.left = iL + "px";
+							handler.style.top = iT + "px";
+							oNear = oThis.findNearest(obj);
+							for(var i=0;i<oThis.aLi.length;i++){
+								oThis.aLi[i].className = "";
+							}
+							oNear && (oNear.className = "hig");
+							return false;
+						}
+						document.onmouseup = function(){
+							document.onmousemove = null;
+							document.onmouseup = null;
+							if(oNear){
+								oNear.style.zIndex = oThis.zIndex++;
+								oThis.doMove(handler,getPos(oNear));
+								oThis.doMove(oNear,oThis.aPos[handler.index]);
+								oNear.className = "";
+								var n = handler.index;
+								handler.index = oNear.index;
+								oNear.index = n;
+							}else
+							{
+								oThis.doMove(obj,oThis.aPos[obj.index]);
+							}
+							handler.releaseCapture && handler.releaseCapture();
+						};
+						this.setCapture && this.setCapture();
+						return false;
+						}
 				},
 				doMove:function(obj,target,callback){
 					var oThis = this;//this==photoWall;
@@ -147,13 +215,43 @@
 						},30);
 				},
 				findNearest:function(obj){
-					
+					var aDis = [];
+					for(var i=0;i<this.aLi.length;i++){
+						aDis[i] = (this.aLi[i]==obj)? Number.MAX_VALUE : this.getDistance(obj,this.aLi[i]);}
+					var minNum = Number.MAX_VALUE;
+					var minIndex = -1;
+					for(var i=0;i<aDis.length;i++){
+						(minNum>aDis[i]) &&(minNum=aDis[i],minIndex = i) ;
+					}
+					return this.isButt(obj,this.aLi[minIndex]) ? this.aLi[minIndex] : null;
 				},
-				getDistance: function(obj1,Obj2){
-					
+				getDistance: function(obj1,obj2){
+					var a = (obj1.offsetLeft - obj1.offsetWidth/2) - (obj2.offsetLeft - obj2.offsetWidth/2);
+					var b = (obj1.offsetTop - obj1.offsetHeight/2) - (obj2.offsetTop - obj2.offsetHeight/2);
+					return Math.sqrt(a*a + b*b);
 				},
-				isButt:{},
-				randomOrder:{}
+				isButt: function(obj1,obj2){
+					var l1 = obj1.offsetLeft;
+					var t1 = obj1.offsetTop;
+					var r1 = obj1.offsetWidth + l1;
+					var b1 = obj1.offsetHeight + t1;
+					
+					var l2 = obj2.offsetLeft;
+					var t2 = obj2.offsetTop;
+					var r2 = obj2.offsetWidth + l2;
+					var b2 = obj2.offsetHeight + t2;
+					
+					return !(l1>r2 || l2>r1 || t1>b2 || t2>b1);
+				},
+				randomOrder: function(){
+					this.aPos.sort(function(){
+						return Math.random()>0.5?1:-1;
+					});
+					for(var i=0;i<this.aPos.length;i++){
+						this.aLi[i].index = i;
+						this.doMove(this.aLi[i],this.aPos[i]);
+					}
+				}
 			}
 			window.onload = function(){
 				var aBox = $$$("box");
@@ -168,13 +266,12 @@
 					var oExample = new PhotoWall(aBox[i],aData);//创建了PhotoWall对象，也就是this。this.oParent == div.box
 					aExample.push(oExample);
 				}
+			
 				this.onresize = function(){
 					for(var p in aExample) aExample[p].changeLayout();
 				}
 				this.onresize();
-			}
-			
-			
+			}		
 		</script>
 	</body>
 </html>
