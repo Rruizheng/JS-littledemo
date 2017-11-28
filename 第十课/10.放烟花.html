@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<title>放烟花</title>
 		<style>
+			html,body{overflow: hidden;}
 			body,div,p{margin: 0;padding: 0;}
 			body{background: #000;font: 12px/1.5 arial;color: #7A7A7A;}
 			a{text-decoration: none;outline: none;}
@@ -54,11 +55,14 @@
 			FireWorks.prototype = {
 				initialize: function(){
 					clearTimeout(this.timer);
+					//清除手动播放效果
 					fgm.un(document,"click",this.fnManual);
 					switch(this.type){
+						//手动播放
 						case 1:
 							fgm.on(document,"click",this.fnManual);
 							break;
+						//自动播放
 						case 2:
 							this.auto();
 							break;
@@ -76,7 +80,7 @@
 					that.timer = setTimeout(function(){
 						that._create_({
 							x: fgm.randomRange(50,document.documentElement.clientWidth-50),
-							y: fgm.randomRange(50,document.documentElement.clientHeight-50)
+							y: fgm.randomRange(50,document.documentElement.clientHeight-150)
 						})
 						that.auto();
 					},fgm.randomRange(900,1100))
@@ -106,6 +110,7 @@
 					
 					oEntity.timer = setInterval(function(){
 						oEntity.style.top = oEntity.offsetTop -20 + "px";
+						//发射过程，上升直到鼠标点击位置
 						if(oEntity.offsetTop <= param.y){
 							clearInterval(oEntity.timer);
 							document.body.removeChild(oEntity);
@@ -155,7 +160,7 @@
 					},30)
 				},
 				
-			}
+			};
 			
 			fgm.on(window,"load",function(){
 				var oTips = document.getElementById("tips");
@@ -179,7 +184,7 @@
 								oFireWorks.type = 2;
 								break;
 							case "stop":
-								oFireWorks.type = 3;
+								oFireWorks.type = 0;
 								break;
 						}
 						oFireWorks.initialize();
