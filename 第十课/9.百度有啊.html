@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body,div,ul,li,dl,dd,dt,h3{margin: 0;padding: 0;}
+			body{font: 12px/1.5 arial;color: #333;}
+			li{list-style-type: none;}
+			a:link,a:visited,a:active{color: #333;text-decoration: none;}
+			a:hover{color:#F30}
+			img{border:none}
+			#box{width: 740px;margin: 10px auto;}
+			#container{position: relative;height: 232px;background: #FCFCFC;}
+			.item{position: absolute;top: 0;left: 0;width: 492px;height: 230px;overflow: hidden;background:#FAFAFA ;border: 1px solid #ddd;z-index: 1;opacity: 1;}
+			.item .pic{float: left;width: 210px;height: 200px;margin: 15px;display: inline;}
+			.pic .img{width: 210px;height: 200px;vertical-align: top;}
+			.txt{float: left;width: 250px;margin-top: 12px;}
+			.txt dt{font-size: 14px;font-weight: 700;}
+			.info{color: #999;}
+			dd{height: 24px;line-height: 24px;}
+			dd span{float: left;}
+			.star{position: relative;float: left;height: 12px;width: 69px;margin: 6px 0 0 5px;}
+			.star .star_red{position: absolute;float: left;height: 12px;width: 69px;z-index: 2;background: url(img/youa/star.png) repeat-x scroll left top transparent;}
+			.star_grey{background: url(img/youa/star.png) repeat-x scroll left -15px transparent;height: 12px;width: 69px;} 
+			
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div id="container">
+				<div class="item">
+					<div class="pic">
+						<a href="javascript:;"><img src="img/youa/1.jpg"/></a>
+					</div>
+					<div class="txt">
+						<dl>
+							<dt><a href="javascript:;">必图拳馆</a></dt>
+							<dd class="info">不要</dd>
+							<dd>
+								<span>总体评价：</span>
+								<div class="star">
+									<div class="star_red" style="width:48px"></div>
+									<div class="star_grey" style="width:48px"></div>
+								</div>
+							</dd>
+							<dd>
+								<span>用户印象</span>
+								<span class="pink">过瘾</span>
+								<span class="blue">带劲</span>
+								<span class="green">有活力</span>
+							</dd>
+						</dl>
+						<div class="comment">
+							<h3>用户评价</h3>
+							<div class="comment_list">
+								<ul id="list">
+									 <li title="thaifight：是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。"><b>thaifight：</b>是一个非常好的一个拳馆。国内数一数二了。教练全是各个方面的专家。</li>
+			                        <li title="快乐小友：散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！"><b>快乐小友：</b>散打课的实战机会挺多 很过瘾 能和杨教练学到真东西！</li>
+			                        <li title="爱情赛车：白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好"><b>爱情赛车：</b>白天人很少，喜欢安静的朋友可以去这练，晚上也不乱而且气氛刚刚好，感觉很好比健身俱乐部好</li>  
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="control">
+				
+			</div>
+		</div>
+	</body>
+</html>
