@@ -23,7 +23,177 @@
 		<p>由于浏览器渲染能力有限, 当浏览器为IE或选择自动放烟花时, 随机生成的烟花碎片范围自动调整至20-30</p>
 		
 		<script>
+			var fgm = {
+				on: function(element,type,handler){
+					return element.addEventListener ? element.addEventListener(type,handler,false) : element.attachEvent("on"+type,handler);
+				},
+				un: function(element,type,handler){
+					return element.removeEventListener ? element.removeEventListener(type,handler,false) : element.detachEvent("on"+type,handler);
+				},
+				bind: function(object,handler){
+					return function(){
+						return handler.apply(object,arguments);
+					}
+				},
+				randomRange: function(lower,upper){
+					return Math.floor(Math.random()*(upper - lower + 1)+lower);
+				},
+				getRanColor: function(){
+					var str = this.randomRange(0,0xFFFFFF).toString(16);
+					while(str.length<6) str = "0" + str;
+					return "#"+str;
+				}
+			};
 			
+			function FireWorks(){
+				this.type = 0;
+				this.timer = null;
+				this.fnManual = fgm.bind(this,this.manual);
+			}
+			
+			FireWorks.prototype = {
+				initialize: function(){
+					clearTimeout(this.timer);
+					fgm.un(document,"click",this.fnManual);
+					switch(this.type){
+						case 1:
+							fgm.on(document,"click",this.fnManual);
+							break;
+						case 2:
+							this.auto();
+							break;
+					};
+				},
+				manual: function(event){
+					event = event || window.event;
+					this._create_({
+						x: event.clientX,
+						y: event.clientY
+					})
+				},
+				auto: function(){
+					var that = this;
+					that.timer = setTimeout(function(){
+						that._create_({
+							x: fgm.randomRange(50,document.documentElement.clientWidth-50),
+							y: fgm.randomRange(50,document.documentElement.clientHeight-50)
+						})
+						that.auto();
+					},fgm.randomRange(900,1100))
+				},
+				
+				//param:clientX,clientY鼠标点击的时候
+				_create_: function(param){
+					var that = this;
+					var oEntity = null;
+					var aChip = [];
+					var oChip = null;
+					var timer = null;
+					var oFrag = document.createDocumentFragment();//用来存放片段
+					
+					//创建烟火点
+					oEntity = document.createElement("div");
+					with(oEntity.style){
+						position = "absolute";
+						top = document.documentElement.clientHeight + "px"; //最低下
+						left = param.x + "px"; //鼠标点击的横坐标
+						width = "4px";
+						height = "30px";
+						borderRadius = "4px"; // 椭圆形
+						background = fgm.getRanColor();//随机颜色
+					}
+					document.body.appendChild(oEntity);
+					
+					oEntity.timer = setInterval(function(){
+						oEntity.style.top = oEntity.offsetTop -20 + "px";
+						if(oEntity.offsetTop <= param.y){
+							clearInterval(oEntity.timer);
+							document.body.removeChild(oEntity);
+							(function(){
+								//使用ie浏览器或者自动播放时候，随机范围缩小到20,30
+								var len = (/msie/i.test(navigator.userAgent) || that.type == 2) ? fgm.randomRange(20, 30) : fgm.randomRange(50, 100);
+								//创建碎片
+								for(i=0;i<len;i++){
+									oChip = document.createElement("div");
+									//鼠标点击点出发。
+									with(oChip.style){
+										position = "absolute";
+										top = param.y + "px";
+										left = param.x + "px";
+										width = "4px";
+										height = "4px";
+										borderRadius = "4px";
+										overflow = "hidden";
+										background = fgm.getRanColor();
+									}
+									//随机下落速度。
+									oChip.speedX = fgm.randomRange(-20,20);
+									oChip.speedY = fgm.randomRange(-20,20);
+									oFrag.appendChild(oChip);
+									aChip[i]=oChip;
+								};
+								document.body.appendChild(oFrag);//将len个烟花碎片插入
+								//设置每个点的移动
+								timer = setInterval(function(){
+									for(i=0;i<aChip.length;i++){
+										var obj = aChip[i];
+										with(obj.style){
+											top = obj.offsetTop + obj.speedY + "px";
+											left = obj.offsetLeft + obj.speedX + "px";
+										};
+										obj.speedY++;
+										
+										(obj.offsetTop < 0 || obj.offsetLeft < 0 || obj.offsetTop > document.documentElement.clientHeight || obj.offsetLeft > document.documentElement.clientWidth)&&(document.body.removeChild(obj),aChip.splice(i,1))
+										//删除从i开始后面1项，删除i。
+									};
+									!aChip[0] && clearInterval(timer);//当aChip为空，停止循环。
+								},30);	
+							})();	
+						}
+						
+						
+					},30)
+				},
+				
+			}
+			
+			fgm.on(window,"load",function(){
+				var oTips = document.getElementById("tips");
+				var aBtn = oTips.getElementsByTagName("a");
+				var oFireWorks = new FireWorks();
+				
+				fgm.on(oTips,"click",function(event){
+					var oEvent = event||window.event;
+					var oTarget = oEvent.target || oEvent.srcElement;
+					var i=0;
+					//如果是按钮的话,判断具体是哪个按钮
+					if(oTarget.tagName.toUpperCase() == "A") {
+						for(i=0;i<aBtn.length;i++){
+							aBtn[i].className = "";
+						}
+						switch(oTarget.id){
+							case "manual":
+								oFireWorks.type = 1;
+								break;
+							case "auto":
+								oFireWorks.type = 2;
+								break;
+							case "stop":
+								oFireWorks.type = 3;
+								break;
+						}
+						oFireWorks.initialize();
+						oTarget.className = "active";
+						oEvent.stopPropagation ? oEvent.stopPropagation() : oEvent.cancelBubble = true;
+					}
+				})
+				
+			});
+			//阻止默认行为
+			fgm.on(document,"contextmenu",function(event){
+				var oEvent = event || window.event;
+				oEvent.preventDefault ? oEvent.preventDefault() : oEvent.returnValue = false;
+			});
 		</script>
 	</body>
 </html>
