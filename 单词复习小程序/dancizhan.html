@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>单词斩</title>
+		<style>
+			body,html,div,p,button,h3,input{padding: 0;margin: 0;}
+			body{font:17px "幼圆";color:darkgreen ;}
+			.box{width:250px;height: auto;border: 2px solid rgb(131,175,155);margin: 10px auto;background: rgb(252,157,154);border-radius: 10px;}
+			h3{padding:10px;text-align: center;border-bottom: 2px solid rgb(131,175,155);}
+			#head{margin: 5px 0 10px 20px;}
+			.chinese{font-size: 24px;color:black;font-weight:800;}
+			p{padding: 5px;}
+			input{width: 100px;}
+			button{margin: 5px auto;width: 50px;height: 25px;border: 1px solid lightblue;border-radius: 5px;display: block;background:rgb(131,175,155);color: #FFF;font-family: "幼圆";}
+			#res{font-size: 14px;color: darkred;}
+		</style>
+	</head>
+	<body>
+		<div class="box">
+			<h3>一起背单词</h3>
+		<div id="head">
+			<p><label>中文意思：</label><span class="chinese"></span></p>
+			<p><label for="">请输入：</label><input type="text" class="english" /></p>
+			<button>确认</button>
+			<p id="res"></p>
+		</div>
+			
+		</div>
+		
+		
+		
+		<script>
+			window.onload = function(){
+				var arr1=['apple','pear','sleep'];
+				var ar1 = [].concat(arr1);
+				var arr2=['苹果','梨','睡觉'];
+				var ar2 = [].concat(arr2);
+				var chi = document.getElementsByClassName("chinese")[0];
+				var eng = document.getElementsByClassName("english")[0];
+				var i=0;
+				var length = arr1.length;
+				var btn = document.getElementsByTagName("button")[0];
+				var res = document.getElementById("res");
+				var len;
+				var ram;
+				
+				showchi();
+				btn.onclick = function(){
+					if(ar1.length>0){
+						if(eng.value === ar1[ram] ){
+							res.innerHTML = "拼写正确";
+							eng.value="";
+							ar2.splice(ram,1);
+							ar1.splice(ram,1);
+							if(ar1.length>0){
+								showchi()
+							}else{
+								var vab = "";
+								for(i=0;i<length;i++){
+									vab = vab+arr2[i]+":"+arr1[i]+" ";
+								}
+								chi.style = "font-size:10px"
+								chi.innerHTML = vab;
+								res.innerHTML = "恭喜你全部背完！";	
+							}
+						}else{
+							res.innerHTML = "拼写错误";
+						} 
+					}else{
+						
+					}
+					
+				}
+				
+				function showchi(){
+						len = ar2.length;
+						ram =Math.ceil(Math.random()*len)-1;
+						chi.innerHTML =ar2[ram];
+				}
+			}
+		</script>
+	</body>
+	
+</html>
